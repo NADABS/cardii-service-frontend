@@ -6,12 +6,13 @@ import { VscChecklist } from "react-icons/vsc"
 import { PiCirclesThree } from "react-icons/pi"
 import { RiSettings3Line } from "react-icons/ri"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+import {cn} from "@/src/lib/utils";
+
 
 const primaryLinks = [
     {
         title: "Home",
-        href: "/",
+        href: "/dashboard",
         icon: <GoHome />,
     },
     {

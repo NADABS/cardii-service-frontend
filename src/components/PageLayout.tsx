@@ -1,5 +1,5 @@
 import React, {PropsWithChildren} from 'react'
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/src/components/Sidebar";
 
 const PageLayout = ({children}: PropsWithChildren) => {
     return (
@@ -7,7 +7,7 @@ const PageLayout = ({children}: PropsWithChildren) => {
             <aside className="h-full w-[20%]">
                <Sidebar />
             </aside>
-            <div>
+            <div className="w-[80%] h-full">
                 {children}
             </div>
         </div>

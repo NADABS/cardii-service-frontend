@@ -1,5 +1,5 @@
-import PageLayout from "@/components/PageLayout";
 import {PropsWithChildren} from "react";
+import PageLayout from "@/src/components/PageLayout";
 
 const MainViewLayout = ({children}: PropsWithChildren) => {
     return (
