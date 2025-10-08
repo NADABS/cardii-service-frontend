@@ -4,6 +4,7 @@ import StatisticsSection from "@/src/components/dashboard/StatisticsSection";
 import {BiLike, BiTrendingUp} from "react-icons/bi";
 import {CiStopwatch} from "react-icons/ci";
 import {PerformanceComponent} from "@/src/components/dashboard/PerformanceComponent";
+import {CurrentTasksTable} from "@/src/components/dashboard/CurrentTasksTable";
 
 export default function Page () {
 
@@ -25,7 +26,7 @@ export default function Page () {
             <div className="text-gray-400">
                 Track team progress here. You&apos;ve almost met your goals
             </div>
-            <div className="h-screen overflow-y-scroll">
+            <div className="overflow-y-scroll" style={{ height: 'calc(100vh - 120px)' }}>
                 <StatisticsSection stats={[
                     {
                         icon: BiLike,
@@ -47,9 +48,7 @@ export default function Page () {
                     },
                 ]} />
                 <PerformanceComponent />
-                <div>
-
-                </div>
+                <CurrentTasksTable />
             </div>
 
         </div>

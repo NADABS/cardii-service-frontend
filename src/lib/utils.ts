@@ -29,3 +29,17 @@ export const getToday = (): string => {
 
     return `${day}${getOrdinal(day)} ${month}, ${year}`;
 };
+
+export const formatStatus = (_status?: string) => {
+    if (!_status) {
+        return "";
+    }
+    return _status.replace(/\s+/g, "").toLowerCase();
+}
+
+export const statusColourMap: Record<string, string> = {
+    done: "bg-[#92C9B8]",
+    onhold: "bg-[#6A9AD3]",
+    inprogress: "bg-[#DD944B]",
+    "": "bg-gray-400",
+}

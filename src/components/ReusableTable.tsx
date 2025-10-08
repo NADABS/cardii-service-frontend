@@ -45,6 +45,7 @@ export type DataTableProps<T> = {
     cardHeaderData?: React.ReactNode;
     tableHeaderClassName?: string;
     tableCellClassName?: string;
+    showHeadersRow?: boolean;
 };
 
 export function ReusableTable<T extends Record<string, any>>({
@@ -65,6 +66,7 @@ export function ReusableTable<T extends Record<string, any>>({
                                                              cardHeaderData,
                                                              tableHeaderClassName,
                                                              tableCellClassName,
+                                                             showHeadersRow = true
                                                          }: DataTableProps<T>) {
     const [query, setQuery] = useState("");
 
@@ -100,12 +102,13 @@ export function ReusableTable<T extends Record<string, any>>({
                 <Table>
                     {caption && <TableCaption>{caption}</TableCaption>}
 
-                    <TableHeader>
+                    { showHeadersRow && (
+                        <TableHeader>
                         <TableRow>
                             {columns.map((col) => (
                                 <TableHead
                                     key={String(col.accessor)}
-                                    style={{ width: col.width }}
+                                    style={{width: col.width}}
                                     className={twMerge(
                                         `text-${col.align ?? "left"} border-b border-borderprimary`,
                                         tableHeaderClassName,
@@ -116,11 +119,11 @@ export function ReusableTable<T extends Record<string, any>>({
                                 </TableHead>
                             ))}
                             {rowActions && (
-                                <TableHead className="text-center border-b border-borderprimary" />
+                                <TableHead className="text-center border-b border-borderprimary"/>
                             )}
                         </TableRow>
                     </TableHeader>
-
+                    )}
                     <TableBody>
                         {filtered.length ? (
                             filtered.map((row, i) => (
@@ -151,11 +154,16 @@ export function ReusableTable<T extends Record<string, any>>({
                         ) : (
                             <TableRow>
                                 <TableCell
-                                    colSpan={columns.length + (rowActions ? 1 : 0)}
+                                    colSpan={
+                                        showHeadersRow
+                                            ? columns.length + (rowActions ? 1 : 0)
+                                            : 1
+                                    }
                                     className="text-center py-4"
                                 >
                                     {emptyState}
                                 </TableCell>
+
                             </TableRow>
                         )}
                     </TableBody>
