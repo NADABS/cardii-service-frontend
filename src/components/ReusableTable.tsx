@@ -99,7 +99,7 @@ export function ReusableTable<T extends Record<string, any>>({
                         />
                     </div>
                 )}
-                <Table>
+                <Table className="border rounded-2xl">
                     {caption && <TableCaption>{caption}</TableCaption>}
 
                     { showHeadersRow && (

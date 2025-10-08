@@ -41,5 +41,7 @@ export const statusColourMap: Record<string, string> = {
     done: "bg-[#92C9B8]",
     onhold: "bg-[#6A9AD3]",
     inprogress: "bg-[#DD944B]",
-    "": "bg-gray-400",
+    success: "bg-[#EBFFF2] text-[#4AA673]  border-[#4AA673] ",
+    completed: "bg-[#EBFFF2] text-[#4AA673]  border-[#4AA673] ",
+    "": "bg-gray-400 text-gray-600",
 }
