@@ -1,3 +1,4 @@
+'use client';
 import React from 'react'
 import {CiSearch, CiWavePulse1} from "react-icons/ci";
 import {IoTerminalOutline} from "react-icons/io5";
@@ -6,15 +7,35 @@ import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table";
 import {formatStatus, statusColourMap} from "@/src/lib/utils";
 import {HiClock} from "react-icons/hi2";
 import {BsThreeDots} from "react-icons/bs";
+import { ChevronDown } from "lucide-react"
+import { format } from "date-fns"
+import type { DateRange } from "react-day-picker"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+
 
 export const CurrentTasksTable = () => {
 
-    // <div className="flex space-x-2">
-    //                 <div className="w-6 h-6 rounded-full bg-[#DFE5EF] flex justify-center items-center">
-    //                     <CiWavePulse1 />
-    //                 </div>
-    //                 <p>Product Review for UI Market</p>
-    //             </div>
+    const [date, setDate] = React.useState<DateRange | undefined>()
+
+    const formatDateRange = (dateRange: DateRange | undefined) => {
+        if (!dateRange) return "Date Range"
+
+        const { from, to } = dateRange
+
+        if (from && to) {
+            return `${format(from, "MMM dd, yyyy")} - ${format(to, "MMM dd, yyyy")}`
+        }
+
+        if (from) {
+            return format(from, "MMM dd, yyyy")
+        }
+
+        return "Date Range"
+    }
 
     const tasks = [
         {title:{
@@ -41,18 +62,39 @@ export const CurrentTasksTable = () => {
         }
     ]
 
-    const mockMeta = {
-        currentPage: 0,
-        firstPage: 0,
-        lastPage: 0,
-        perPage: 0,
-        nextPageUrl: "",
-        prevPageUrl: "",
-        total: 0,
-    }
-
     return (
+        <div className="mt-6">
+            <div className="flex items-center justify-between gap-4 py-4">
+                <div className="flex items-center gap-6">
+                    <h1 className="text-2xl font-bold">Current Tasks</h1>
+                    <div className="h-6 w-px bg-border" />
+                    <span className="text-muted-foreground">Done 30%</span>
+                </div>
+
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            className={cn("justify-between gap-2 font-normal", !date && "text-muted-foreground")}
+                        >
+                            {formatDateRange(date)}
+                            <ChevronDown className="h-4 w-4 opacity-50" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="end">
+                        <Calendar
+                            initialFocus
+                            mode="range"
+                            defaultMonth={date?.from}
+                            selected={date}
+                            onSelect={setDate}
+                        />
+                    </PopoverContent>
+                </Popover>
+            </div>
+
         <Table>
+
             <TableBody>
                 {tasks.map((task, index)=> (
                     <TableRow key={index} >
@@ -81,6 +123,7 @@ export const CurrentTasksTable = () => {
                 ))}
             </TableBody>
         </Table>
+        </div>
     )
 }
 
