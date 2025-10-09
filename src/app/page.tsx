@@ -1,103 +1,82 @@
-import Image from "next/image";
+'use client';
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react"
+import NavBar from "@/src/components/landing-page/NavBar";
+import {FaArrowLeft, FaArrowRight} from "react-icons/fa";
+import {useRouter} from "next/navigation";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+export default function Page() {
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    const router = useRouter();
+
+    function handleNavigate() {
+        router.push('/register')
+    }
+
+    return (
+        <div className="min-h-screen">
+            <NavBar />
+            <main className="relative h-[calc(100vh-60px)]">
+                {/* Background Image */}
+                <div
+                    className="absolute inset-0 bg-no-repeat bg-center bg-cover sm:bg-[length:auto_170%] sm:bg-center md:bg-[length:auto_150%] md:bg-center lg:[length:auto_100%] lg:bg-center
+  "
+                    style={{
+                        backgroundImage: `
+      linear-gradient(to bottom, #11182700, #111827),
+      url('/images/escalade.jpg')
+    `,
+                    }}
+                >
+                </div>
+
+                <div className="relative z-10 flex h-full flex-col items-start justify-end pb-24 px-6 md:justify-end md:pb-32 lg:justify-center lg:pb-0 lg:px-24">
+                    <div className="max-w-4xl lg:px-12">
+                        <h1 className="font-bold text-4xl text-white leading-tight md:text-5xl lg:text-7xl">
+                            Rent A Car{" "}
+                            <span className="relative inline-block">
+                Anytime
+                <span className="absolute bottom-1 left-0 h-1.5 w-full bg-[#D4F14E] md:bottom-2 md:h-2" />
+              </span>
+                            , Anywhere.
+                        </h1>
+
+                        <p className="mt-4 text-base text-white/90 md:mt-6 md:text-lg lg:text-xl">
+                            Flexible rentals for individuals and fleet managers. Choose, book, and drive, all in one tap.
+                        </p>
+
+                        <Button onClick={handleNavigate} size="lg" className="mt-6 pl-4 py-6 pr-0.5 flex justify-between items-center rounded-full gap-2 bg-[#D4F14E] font-semibold text-[#2563EB] hover:bg-[#C5E23D] md:mt-8">
+                            Reserve a seat
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
+                                <ArrowRight className="h-4 w-4 text-white" />
+                            </div>
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Navigation Arrows */}
+                <button
+                    className="absolute top-1/4 left-6 z-20 flex h-36 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-[#A2BFFF4D] backdrop-blur-sm transition-colors hover:bg-slate-600/70 lg:left-12"
+                    aria-label="Previous slide"
+                >
+                    <FaArrowLeft className="h-4 w-4 text-white" />
+                </button>
+
+                <button
+                    className="absolute top-1/4 right-6 z-20 flex h-36 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-[#A2BFFF4D] backdrop-blur-sm transition-colors hover:bg-slate-600/70 lg:right-12"
+                    aria-label="Next slide"
+                >
+                    <FaArrowRight className="h-4 w-4 text-white" />
+                </button>
+
+                {/* Carousel Indicators */}
+                <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+                    <div className="h-1.5 w-12 rounded-full bg-blue-600" />
+                    <div className="h-1.5 w-4 rounded-full bg-white/50" />
+                    <div className="h-1.5 w-4 rounded-full bg-white/50" />
+                    <div className="h-1.5 w-4 rounded-full bg-white/50" />
+                </div>
+            </main>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    )
 }

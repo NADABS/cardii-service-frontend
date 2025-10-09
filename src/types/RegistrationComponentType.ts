@@ -1,0 +1,1 @@
+export type RegistrationComponent = "waitlistForm" | "verification" | "success" | "error";
