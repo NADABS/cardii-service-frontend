@@ -7,7 +7,7 @@ const RegistrationLayout = ({children}: PropsWithChildren) => {
             <div className="hidden lg:flex h-screen w-full relative">
                 {/* Background image + gradient */}
                 <div
-                    className="absolute inset-0 bg-cover bg-center"
+                    className="absolute inset-0 bg-cover bg-center "
                     style={{
                         backgroundImage: "url('/images/escalade.jpg')",
                     }}
@@ -16,9 +16,9 @@ const RegistrationLayout = ({children}: PropsWithChildren) => {
                 </div>
 
                 {/* Left side (image visible) */}
-                <div className="flex-1 relative flex flex-col justify-end text-white p-8">
-                    <footer className="bg-black/30 p-4 rounded-xl text-sm text-center">
-                        © 2025 Your Company — All rights reserved
+                <div className="flex-1 relative flex flex-col justify-end text-white ">
+                    <footer className=" p-4 font-bold  text-3xl text-left">
+                        Cardii
                     </footer>
                 </div>
 

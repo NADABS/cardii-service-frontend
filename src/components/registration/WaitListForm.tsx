@@ -28,9 +28,9 @@ export function WaitlistForm({setActiveComponent}: Props) {
     }
 
     return (
-        <div className="w-full max-w-2xl bg-green-200 rounded-lg p-8 md:p-12">
+        <div className="w-full max-w-2xl  rounded-lg sm:mt-4 md:p-12">
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 sm:justify-start">
                 <div className="space-y-2">
                     <Label htmlFor="name" className="text-base font-normal">
                         <span className="text-red-500">*</span>Name

@@ -133,13 +133,13 @@ export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveCompon
                 </div>
 
                 <div className="text-center text-sm text-foreground/80">
-                    Didn&apos;t receive OTP?,{" "}
+                    Didn&apos;t receive OTP?{" "}
                     <button
                         type="button"
                         onClick={handleResend}
                         disabled={countdown > 0}
                         className={`font-medium underline ${
-                            countdown > 0 ? "text-foreground/40 cursor-not-allowed" : "text-foreground hover:text-foreground/80"
+                            countdown > 0 ? "text-foreground/40 cursor-not-allowed" : " text-blue-400 hover:text-blue-600"
                         }`}
                     >
                         Resend
