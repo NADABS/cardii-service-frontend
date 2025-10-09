@@ -16,8 +16,8 @@ export default function Page() {
     }
 
     return (
-        <div className="w-full flex flex-col items-center justify-center">
-            <div className="mb-4">
+        <div className="w-full  flex flex-col items-center justify-center">
+            <div className="lg:mt-6">
                 <div className="text-2xl md:text-3xl font-bold text-foreground mb-4 text-balance">
                     Join the waitlist for early access to our connected mobility platform
                 </div>

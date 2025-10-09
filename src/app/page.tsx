@@ -22,10 +22,7 @@ export default function Page() {
                     className="absolute inset-0 bg-no-repeat bg-center bg-cover sm:bg-[length:auto_170%] sm:bg-center md:bg-[length:auto_150%] md:bg-center lg:[length:auto_100%] lg:bg-center
   "
                     style={{
-                        backgroundImage: `
-      linear-gradient(to bottom, #11182700, #111827),
-      url('/images/escalade.jpg')
-    `,
+                        backgroundImage: `linear-gradient(to bottom, #11182700, #111827), url('/images/escalade.jpg')`,
                     }}
                 >
                 </div>
