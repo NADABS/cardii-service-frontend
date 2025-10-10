@@ -5,7 +5,7 @@ import {WaitlistForm} from "@/src/components/registration/WaitListForm";
 import {OTPVerification} from "@/src/components/registration/OTPVerification";
 import {SuccessScreen} from "@/src/components/registration/SuccessScreen";
 
-export default function Page() {
+export default function RegisterPage() {
 
     const [activeComponent, setActiveComponent] = useState<RegistrationComponent>("waitlistForm");
 

@@ -2,7 +2,7 @@ import {PropsWithChildren} from "react";
 import RegistrationLayout from "@/src/components/registration/RegistrationLayout";
 
 
-const RegistrationViewsLayout = ({children}: PropsWithChildren) => {
+const AuthLayout = ({children}: PropsWithChildren) => {
     return (
         <RegistrationLayout>
             {children}
@@ -10,4 +10,4 @@ const RegistrationViewsLayout = ({children}: PropsWithChildren) => {
     )
 }
 
-export default RegistrationViewsLayout;
+export default AuthLayout;

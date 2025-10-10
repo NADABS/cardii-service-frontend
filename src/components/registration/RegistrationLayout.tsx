@@ -4,7 +4,7 @@ import higherZ from "@/public/images/higherZIndex.png";
 import lowerZ from "@/public/images/lowerZIndex.jpg"
 import Image from "next/image";
 
-const RegistrationLayout = ({children}: PropsWithChildren) => {
+const AuthLayout = ({children}: PropsWithChildren) => {
     return (
         <div className="min-h-screen w-full">
             {/* ---------- Laptop / Desktop (lg+) ---------- */}
@@ -41,4 +41,4 @@ const RegistrationLayout = ({children}: PropsWithChildren) => {
         </div>
     )
 }
-export default RegistrationLayout
+export default AuthLayout

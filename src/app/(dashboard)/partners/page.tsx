@@ -2,7 +2,7 @@ import TasksTable from "@/src/components/tasks/TasksTable";
 import IMeta from "@/src/types/Meta";
 import {Task} from "@/src/types/Task";
 
-export default function Page () {
+export default function PartnersPage () {
 
     const meta: IMeta = {
         currentPage: 1,

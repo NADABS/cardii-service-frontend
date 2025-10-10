@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Eye, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {ReusableTable} from "@/src/components/ReusableTable";
 import IMeta from "@/src/types/Meta";
