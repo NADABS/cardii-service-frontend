@@ -1,25 +1,25 @@
 import React, {PropsWithChildren} from 'react'
+import bottomImage from "@/public/images/bottomImg.jpg";
+import higherZ from "@/public/images/higherZIndex.png";
+import lowerZ from "@/public/images/lowerZIndex.jpg"
+import Image from "next/image";
 
 const RegistrationLayout = ({children}: PropsWithChildren) => {
     return (
         <div className="min-h-screen w-full">
             {/* ---------- Laptop / Desktop (lg+) ---------- */}
             <div className="hidden lg:flex h-screen w-full relative">
-                {/* Background image + gradient */}
-                <div
-                    className="absolute inset-0 bg-cover bg-center "
-                    style={{
-                        backgroundImage: "url('/images/escalade.jpg')",
-                    }}
-                >
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#11182700] to-[#111827]" />
-                </div>
-
                 {/* Left side (image visible) */}
-                <div className="flex-1 relative flex flex-col justify-end text-white ">
-                    <footer className=" p-4 font-bold  text-3xl text-left">
-                        Cardii
-                    </footer>
+                <div className="flex-1 relative flex flex-col bg-[#F5F5F5]  ">
+                    <div className="z-10 absolute bg-white h-fit w-fit p-2 border rounded-2xl top-1/20 left-17">
+                        <Image width={341} height={456} src={lowerZ} alt="Img1" />
+                    </div>
+                    <div className="z-30 absolute  h-fit w-fit bottom-1/8 right-14">
+                        <Image width={341} height={456} src={higherZ} alt="Img2" />
+                    </div>
+                    <div className="z-30 absolute  h-fit w-fit bottom-1/20 left-28">
+                        <Image width={175} height={200} src={bottomImage} alt="Img3" style={{ borderRadius: '16px' }}/>
+                    </div>
                 </div>
 
                 {/* Right side (white content panel) */}

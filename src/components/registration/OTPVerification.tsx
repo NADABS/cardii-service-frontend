@@ -127,7 +127,7 @@ export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveCompon
                             onChange={(e) => handleChange(index, e.target.value)}
                             onKeyDown={(e) => handleKeyDown(index, e)}
                             onPaste={handlePaste}
-                            className="w-12 h-14 md:w-14 md:h-16 text-center text-xl font-semibold border-2 border-border rounded-lg focus:border-foreground focus:outline-none transition-colors"
+                            className="w-10 h-10 md:w-14 md:h-16 text-center text-xl font-semibold border-2 border-border rounded-lg focus:border-foreground focus:outline-none transition-colors"
                         />
                     ))}
                 </div>
