@@ -90,10 +90,10 @@ export function WaitlistForm({setActiveComponent}: Props) {
                             <SelectValue placeholder="Select an option" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="driver">Driver</SelectItem>
-                            <SelectItem value="commuter">Commuter</SelectItem>
-                            <SelectItem value="business">Business Owner</SelectItem>
-                            <SelectItem value="fleet">Fleet Manager</SelectItem>
+                            <SelectItem value="driver">Car Owner / Fleet Manager</SelectItem>
+                            <SelectItem value="commuter">Driver</SelectItem>
+                            <SelectItem value="business">Roadside Support (Towing / Fuel Support)</SelectItem>
+                            <SelectItem value="fleet">Learner (Defensive driving training)</SelectItem>
                             <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                     </Select>

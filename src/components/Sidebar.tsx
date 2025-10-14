@@ -1,39 +1,38 @@
 "use client"
-import { GoHome } from "react-icons/go"
 import Link from "next/link"
-import { CiGrid41 } from "react-icons/ci"
-import { VscChecklist } from "react-icons/vsc"
-import { PiCirclesThree } from "react-icons/pi"
-import { RiSettings3Line } from "react-icons/ri"
-import { usePathname } from "next/navigation"
+import {VscChecklist} from "react-icons/vsc"
+import {PiCirclesThree} from "react-icons/pi"
+import {RiSettings3Line} from "react-icons/ri"
+import {usePathname} from "next/navigation"
 import {cn} from "@/src/lib/utils";
+import {LayoutDashboardIcon, UsersIcon} from "lucide-react";
 
 
 const primaryLinks = [
     {
-        title: "Home",
-        href: "/dashboard",
-        icon: <GoHome />,
+        title: "Overview",
+        href: "/overview",
+        icon: <LayoutDashboardIcon/>,
     },
     {
-        title: "Projects",
-        href: "/projects",
-        icon: <CiGrid41 />,
+        title: "Partners",
+        href: "/partners",
+        icon: <UsersIcon/>,
     },
     {
-        title: "Tasks",
-        href: "/tasks",
-        icon: <VscChecklist />,
+        title: "Administration",
+        href: "/administration",
+        icon: <VscChecklist/>,
     },
     {
-        title: "Team",
-        href: "/team",
-        icon: <PiCirclesThree />,
+        title: "Members",
+        href: "/members",
+        icon: <PiCirclesThree/>,
     },
     {
         title: "Settings",
         href: "/settings",
-        icon: <RiSettings3Line />,
+        icon: <RiSettings3Line/>,
     },
 ]
 

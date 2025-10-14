@@ -11,14 +11,14 @@ const AuthLayout = ({children}: PropsWithChildren) => {
             <div className="hidden lg:flex h-screen w-full relative">
                 {/* Left side (image visible) */}
                 <div className="flex-1 relative flex flex-col bg-[#F5F5F5]  ">
-                    <div className="z-10 absolute bg-white h-fit w-fit p-2 border rounded-2xl top-1/20 left-17">
-                        <Image width={341} height={456} src={lowerZ} alt="Img1" />
+                    <div className="z-10 absolute bg-white h-fit w-fit p-2 border rounded-2xl top-1/20 left-28">
+                        <Image width={341} height={456} src={lowerZ} alt="Img1"/>
                     </div>
-                    <div className="z-30 absolute  h-fit w-fit bottom-1/8 right-14">
-                        <Image width={341} height={456} src={higherZ} alt="Img2" />
+                    <div className="z-30 absolute h-fit w-fit bottom-1/8 right-28">
+                        <Image width={341} height={456} src={higherZ} alt="Img2"/>
                     </div>
-                    <div className="z-30 absolute  h-fit w-fit bottom-1/20 left-28">
-                        <Image width={175} height={200} src={bottomImage} alt="Img3" style={{ borderRadius: '16px' }}/>
+                    <div className="z-30 absolute h-fit w-fit bottom-1/5 left-40">
+                        <Image width={175} height={200} src={bottomImage} alt="Img3" style={{borderRadius: '16px'}}/>
                     </div>
                 </div>
 
