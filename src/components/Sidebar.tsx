@@ -8,33 +8,39 @@ import { RiSettings3Line } from "react-icons/ri"
 import { usePathname } from "next/navigation"
 import {cn, getInitials} from "@/src/lib/utils";
 import {BsThreeDotsVertical} from "react-icons/bs";
+import {VscChecklist} from "react-icons/vsc"
+import {PiCirclesThree} from "react-icons/pi"
+import {RiSettings3Line} from "react-icons/ri"
+import {usePathname} from "next/navigation"
+import {cn} from "@/src/lib/utils";
+import {LayoutDashboardIcon, UsersIcon} from "lucide-react";
 
 
 const primaryLinks = [
     {
-        title: "Home",
+        title: "Overview",
         href: "/overview",
-        icon: <GoHome />,
+        icon: <LayoutDashboardIcon/>,
     },
     {
-        title: "Projects",
-        href: "/projects",
-        icon: <CiGrid41 />,
-    },
-    {
-        title: "Tasks",
+        title: "Partners",
         href: "/partners",
-        icon: <VscChecklist />,
+        icon: <UsersIcon/>,
     },
     {
-        title: "Team",
-        href: "/team",
-        icon: <PiCirclesThree />,
+        title: "Administration",
+        href: "/administration",
+        icon: <VscChecklist/>,
+    },
+    {
+        title: "Members",
+        href: "/members",
+        icon: <PiCirclesThree/>,
     },
     {
         title: "Settings",
         href: "/settings",
-        icon: <RiSettings3Line />,
+        icon: <RiSettings3Line/>,
     },
 ]
 
