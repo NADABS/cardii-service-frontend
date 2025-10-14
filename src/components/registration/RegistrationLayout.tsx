@@ -1,4 +1,5 @@
-import React, {PropsWithChildren} from 'react'
+
+ import React, {PropsWithChildren} from 'react'
 import bottomImage from "@/public/images/bottomImg.jpg";
 import higherZ from "@/public/images/higherZIndex.png";
 import lowerZ from "@/public/images/lowerZIndex.jpg"
