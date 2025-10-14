@@ -10,9 +10,9 @@ import {BsThreeDots} from "react-icons/bs";
 import StatusBadge from "@/src/components/StatusBadge";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {Popover, PopoverTrigger} from "@/components/ui/popover";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {CiFilter} from "react-icons/ci";
-import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 
 interface Props {
     showHeader?: boolean;
@@ -68,7 +68,7 @@ const TasksTable = ({ showHeader = true, tasks, meta }: Props) => {
                 </button>
             </DialogTrigger>
             <DialogContent>
-                <p>{task.title}</p>
+                <DialogTitle>{task.title}</DialogTitle>
                 <p>Id: {task.id}</p>
                 <p>Status: {task.status}</p>
                 <p>Completion Rate: {task.completionRate}%</p>
@@ -105,6 +105,9 @@ const TasksTable = ({ showHeader = true, tasks, meta }: Props) => {
                                         <CiFilter />
                                     </Button>
                                 </PopoverTrigger>
+                                <PopoverContent>
+                                    <p>Filters</p>
+                                </PopoverContent>
                             </Popover>
                         </div>
                     </div>
