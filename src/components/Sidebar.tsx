@@ -1,18 +1,11 @@
 "use client"
-import { GoHome } from "react-icons/go"
 import Link from "next/link"
-import { CiGrid41 } from "react-icons/ci"
 import { VscChecklist } from "react-icons/vsc"
 import { PiCirclesThree } from "react-icons/pi"
 import { RiSettings3Line } from "react-icons/ri"
-import { usePathname } from "next/navigation"
 import {cn, getInitials} from "@/src/lib/utils";
 import {BsThreeDotsVertical} from "react-icons/bs";
-import {VscChecklist} from "react-icons/vsc"
-import {PiCirclesThree} from "react-icons/pi"
-import {RiSettings3Line} from "react-icons/ri"
 import {usePathname} from "next/navigation"
-import {cn} from "@/src/lib/utils";
 import {LayoutDashboardIcon, UsersIcon} from "lucide-react";
 
 
