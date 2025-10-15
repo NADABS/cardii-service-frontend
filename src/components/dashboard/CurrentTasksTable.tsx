@@ -66,9 +66,7 @@ export const CurrentTasksTable = () => {
         <div className="mt-6">
             <div className="flex items-center justify-between gap-4 py-4">
                 <div className="flex items-center gap-6">
-                    <h1 className="text-2xl font-bold">Current Tasks</h1>
-                    <div className="h-6 w-px bg-border" />
-                    <span className="text-muted-foreground">Done 30%</span>
+                    <h1 className="text-2xl font-bold">Recently Onboarded Partners</h1>
                 </div>
 
                 <Popover>
@@ -83,7 +81,6 @@ export const CurrentTasksTable = () => {
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="end">
                         <Calendar
-                            initialFocus
                             mode="range"
                             defaultMonth={date?.from}
                             selected={date}

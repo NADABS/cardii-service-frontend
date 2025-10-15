@@ -5,9 +5,9 @@ import { PiCirclesThree } from "react-icons/pi"
 import { RiSettings3Line } from "react-icons/ri"
 import {cn, getInitials} from "@/src/lib/utils";
 import {BsThreeDotsVertical} from "react-icons/bs";
-import {usePathname} from "next/navigation"
-import {LayoutDashboardIcon, UsersIcon} from "lucide-react";
-
+import {usePathname, useRouter} from "next/navigation"
+import { LayoutDashboardIcon, UsersIcon, LogOutIcon, UserIcon } from "lucide-react"
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 
 const primaryLinks = [
     {
@@ -38,11 +38,18 @@ const primaryLinks = [
 ]
 
 const Sidebar = () => {
+
+    const router = useRouter();
+
     const pathname = usePathname()
 
     const user = {
         name: "John Doe",
         role: "Admin",
+    }
+
+    const handleLogout = () => {
+        router.replace("/")
     }
 
     return (
@@ -80,10 +87,40 @@ const Sidebar = () => {
                     </div>
                 </div>
                 <div>
-                    <button><BsThreeDotsVertical /></button>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <button className="cursor-pointer hover:bg-gray-100 p-2 rounded-md transition-colors">
+                                <BsThreeDotsVertical />
+                            </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-48 p-2" align="end">
+                            <div className="flex flex-col gap-1">
+                                <Link
+                                    href="/profile"
+                                    className="flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 transition-colors"
+                                >
+                                    <UserIcon className="w-4 h-4" />
+                                    <span>Profile</span>
+                                </Link>
+                                <Link
+                                    href="/settings"
+                                    className="flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 transition-colors"
+                                >
+                                    <RiSettings3Line className="w-4 h-4" />
+                                    <span>Settings</span>
+                                </Link>
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 transition-colors text-left w-full"
+                                >
+                                    <LogOutIcon className="w-4 h-4" />
+                                    <span>Logout</span>
+                                </button>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
                 </div>
             </div>
-
         </div>
     )
 }
