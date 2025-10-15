@@ -11,6 +11,9 @@ import {OTPVerification} from "@/src/components/registration/OTPVerification";
 import {Check, ChevronDown} from "lucide-react";
 import { MultiSelect, MultiSelectChangeEvent } from 'primereact/multiselect';
 import {Drawer, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer";
+import {useMutation} from "@tanstack/react-query";
+import {httpPOSTWithoutAuth} from "@/src/lib/http-client";
+import {toJsonString} from "@/src/lib/storage";
 
 interface Props {
     setActiveComponent: (activeComponent: RegistrationComponent) => void;
@@ -35,6 +38,11 @@ export function WaitlistForm({setActiveComponent}: Props) {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
+    const [errorMessage, setErrorMessage] = useState("");
+    const [validationErrors, setValidationErrors] = useState({
+        phoneNumber: []
+    })
+
     const router = useRouter();
 
     const options: OptionType[] = [
@@ -44,6 +52,43 @@ export function WaitlistForm({setActiveComponent}: Props) {
         { name: "Learner (Defensive driving training)", code: "fleet" },
         { name: "Other", code: "other" },
     ]
+
+    const sendOTPMutation = useMutation({
+        mutationFn: async (postRequest: any) => {
+            const response = await httpPOSTWithoutAuth(
+                `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/otp/send`,
+                toJsonString(postRequest),
+                {
+                    "Content-Type": "application/json",
+                }
+            );
+
+            if (response.ok) {
+                setIsDialogOpen(true)
+                return response
+            } else {
+                const errorData = await response.json().catch(() => null);
+                if (response.status === 422) {
+                    const _validationErrors = errorData.errors;
+                    setValidationErrors(_validationErrors);
+                    throw new Error();
+                } else {
+                    setErrorMessage(errorData.errors);
+                    throw new Error(
+                        errorData?.message ||
+                        `Error ${response.status}: ${response.statusText}`
+                    );
+                }
+            }
+
+            return await response.json();
+        },
+        onSuccess: (data) => {
+            // queryClient.invalidateQueries({ queryKey: ["team-members"] });
+            // onSuccess();
+
+        },
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -139,7 +184,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                                             type="button"
                                             disabled={formData.phone.length < 9}
                                             className="h-8 flex items-center justify-center px-3 rounded-md text-xs font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-                                            onClick={() => setIsDialogOpen(true)}
+                                            onClick={()=>sendOTPMutation.mutate({phoneNumber: formData.phone})}
                                         >
                                             Verify
                                         </DialogTrigger>

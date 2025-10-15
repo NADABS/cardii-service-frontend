@@ -4,6 +4,9 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
+import {useMutation} from "@tanstack/react-query";
+import {httpPOSTWithoutAuth} from "@/src/lib/http-client";
+import {toJsonString} from "@/src/lib/storage";
 
 interface OTPVerificationProps {
     phoneNumber: string
@@ -12,11 +15,15 @@ interface OTPVerificationProps {
 }
 
 export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVerificationProps) {
-    const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""])
+    const [otpInput, setOtpInput] = useState<string[]>(["", "", "", "", "", ""])
     const [countdown, setCountdown] = useState(34)
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+    const [errorMessage, setErrorMessage] = useState("");
+    const [validationErrors, setValidationErrors] = useState({
+        phoneNumber: [],
+        otp: []
+    })
 
-    // Countdown timer for resend
     useEffect(() => {
         if (countdown > 0) {
             const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
@@ -24,35 +31,30 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
         }
     }, [countdown])
 
-    // Focus first input on mount
     useEffect(() => {
         inputRefs.current[0]?.focus()
     }, [])
 
     const handleChange = (index: number, value: string) => {
-        // Only allow single digit
         if (value.length > 1) {
             value = value.slice(-1)
         }
 
-        // Only allow numbers
         if (value && !/^\d$/.test(value)) {
             return
         }
 
-        const newOtp = [...otp]
+        const newOtp = [...otpInput]
         newOtp[index] = value
-        setOtp(newOtp)
+        setOtpInput(newOtp)
 
-        // Auto-advance to next input
         if (value && index < 5) {
             inputRefs.current[index + 1]?.focus()
         }
     }
 
     const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-        // Handle backspace
-        if (e.key === "Backspace" && !otp[index] && index > 0) {
+        if (e.key === "Backspace" && !otpInput[index] && index > 0) {
             inputRefs.current[index - 1]?.focus()
         }
     }
@@ -65,15 +67,14 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
             return
         }
 
-        const newOtp = [...otp]
+        const newOtp = [...otpInput]
         pastedData.split("").forEach((char, index) => {
             if (index < 6) {
                 newOtp[index] = char
             }
         })
-        setOtp(newOtp)
+        setOtpInput(newOtp)
 
-        // Focus the next empty input or the last one
         const nextIndex = Math.min(pastedData.length, 5)
         inputRefs.current[nextIndex]?.focus()
     }
@@ -81,23 +82,59 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
     const handleResend = () => {
         if (countdown === 0) {
             setCountdown(34)
-            setOtp(["", "", "", "", "", ""])
+            setOtpInput(["", "", "", "", "", ""])
             inputRefs.current[0]?.focus()
-            // Handle resend logic here
             console.log("Resending OTP...")
         }
     }
 
     const handleVerify = () => {
-        const otpValue = otp.join("")
+        const otpValue = otpInput.join("")
         if (otpValue.length === 6) {
-            onVerifySuccess()
-            console.log("Verifying OTP:", otpValue)
+            mutation.mutate({
+                phoneNumber: phoneNumber,
+                otp: otpValue
+            })
         }
     }
 
-    // Mask phone number
     const maskedPhone = phoneNumber.replace(/\d(?=\d{3})/g, "*")
+
+
+    const mutation = useMutation({
+        mutationFn: async (postRequest: any) => {
+            const response = await httpPOSTWithoutAuth(
+                `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/otp/verify`,
+                toJsonString(postRequest),
+                {
+                    "Content-Type": "application/json",
+                }
+            );
+
+            if (response.ok) {
+                onVerifySuccess()
+                return response
+            } else {
+                const errorData = await response.json().catch(() => null);
+                if (response.status === 422) {
+                    const _validationErrors = errorData.errors;
+                    setValidationErrors(_validationErrors);
+                    throw new Error();
+                } else {
+                    setErrorMessage(errorData.errors);
+                    throw new Error(
+                        errorData?.message ||
+                        `Error ${response.status}: ${response.statusText}`
+                    );
+                }
+            }
+
+            return await response.json();
+        },
+        onSuccess: (data) => {
+
+        },
+    });
 
     return (
         <div className="w-full max-w-full p-1 md:p-3">
@@ -112,7 +149,7 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
 
             <div className="space-y-6">
                 <div className="flex justify-center gap-2 md:gap-3">
-                    {otp.map((digit, index) => (
+                    {otpInput.map((digit, index) => (
                         <input
                             key={index}
                             ref={(el) => {
@@ -148,7 +185,7 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
                 <div className="pt-6">
                     <Button
                         onClick={handleVerify}
-                        disabled={otp.join("").length !== 6}
+                        disabled={otpInput.join("").length !== 6}
                         className="w-full h-12 text-base bg-[#1a1d2e] hover:bg-[#2a2d3e] text-white disabled:opacity-50"
                     >
                         Verify OTP
