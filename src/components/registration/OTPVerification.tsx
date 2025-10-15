@@ -100,7 +100,7 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
     const maskedPhone = phoneNumber.replace(/\d(?=\d{3})/g, "*")
 
     return (
-        <div className="w-full max-w-full p-1">
+        <div className="w-full max-w-full p-1 md:p-3">
             <div className="mb-8 text-center">
                 <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Enter OTP</h1>
                 <p className="text-sm text-foreground/80 leading-relaxed">

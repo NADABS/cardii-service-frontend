@@ -121,3 +121,10 @@
 
 @import "primereact/resources/themes/lara-light-blue/theme.css";
 @import "primereact/resources/primereact.min.css";
+
+.p-multiselect:focus,
+.p-focus {
+  box-shadow: none !important;
+  outline: none !important;
+  border-color: #d1d5db !important;
+}
