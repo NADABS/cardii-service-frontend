@@ -7,12 +7,11 @@ import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
 
 interface OTPVerificationProps {
     phoneNumber: string
-    onVerify?: (otp: string) => void
+    onVerifySuccess: () => void
     onBack?: () => void
-    setActiveComponent: (activeComponent: RegistrationComponent) => void
 }
 
-export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveComponent }: OTPVerificationProps) {
+export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVerificationProps) {
     const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""])
     const [countdown, setCountdown] = useState(34)
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
@@ -92,9 +91,8 @@ export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveCompon
     const handleVerify = () => {
         const otpValue = otp.join("")
         if (otpValue.length === 6) {
-            onVerify?.(otpValue)
+            onVerifySuccess()
             console.log("Verifying OTP:", otpValue)
-            setActiveComponent('success')
         }
     }
 
@@ -102,7 +100,7 @@ export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveCompon
     const maskedPhone = phoneNumber.replace(/\d(?=\d{3})/g, "*")
 
     return (
-        <div className="w-full max-w-xl bg-white rounded-lg p-8 md:p-12">
+        <div className="w-full max-w-full p-1">
             <div className="mb-8 text-center">
                 <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Enter OTP</h1>
                 <p className="text-sm text-foreground/80 leading-relaxed">
@@ -127,7 +125,7 @@ export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveCompon
                             onChange={(e) => handleChange(index, e.target.value)}
                             onKeyDown={(e) => handleKeyDown(index, e)}
                             onPaste={handlePaste}
-                            className="w-10 h-10 md:w-14 md:h-16 text-center text-xl font-semibold border-2 border-border rounded-lg focus:border-foreground focus:outline-none transition-colors"
+                            className="w-9 h-9 md:w-14 md:h-16 text-center text-xl font-semibold border-2 border-border rounded-lg focus:border-foreground focus:outline-none transition-colors"
                         />
                     ))}
                 </div>

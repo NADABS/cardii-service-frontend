@@ -6,6 +6,9 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {useRouter} from "next/navigation";
 import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
+import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {OTPVerification} from "@/src/components/registration/OTPVerification";
+import {Check} from "lucide-react";
 
 interface Props {
     setActiveComponent: (activeComponent: RegistrationComponent) => void;
@@ -19,16 +22,20 @@ export function WaitlistForm({setActiveComponent}: Props) {
         description: "",
     })
 
+    const [isVerified, setIsVerified] = useState(false);
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
     const router = useRouter();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         console.log("Form submitted:", formData)
-        setActiveComponent('verification');
+        setActiveComponent('success');
     }
 
     return (
-        <div className="w-full max-w-2xl  rounded-lg sm:mt-4 md:p-12">
+        <div className="w-full max-w-2xl  rounded-lg pt-4 md:p-4">
 
             <form onSubmit={handleSubmit} className="space-y-6 sm:justify-start">
                 <div className="space-y-2">
@@ -42,7 +49,10 @@ export function WaitlistForm({setActiveComponent}: Props) {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
-                        className="h-12 text-base bg-white border-border"
+                        readOnly={isVerified}
+                        className={`h-10 text-base bg-white border-border ${
+                            isVerified ? "cursor-not-allowed opacity-80" : ""
+                        }`}
                     />
                 </div>
 
@@ -57,23 +67,61 @@ export function WaitlistForm({setActiveComponent}: Props) {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
-                        className="h-12 text-base bg-white border-border"
+                        readOnly={isVerified}
+                        className={`h-10 text-base bg-white border-border ${
+                            isVerified ? "cursor-not-allowed opacity-80" : ""
+                        }`}
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-base font-normal">
-                        <span className="text-red-500">*</span>Phone Number
-                    </Label>
+                <div className="flex w-full space-x-2">
                     <Input
                         id="phone"
                         type="tel"
                         placeholder="Enter a valid phone number"
                         value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        onChange={(e) => {
+                            if (!isVerified) {
+                                setFormData({ ...formData, phone: e.target.value });
+                            }
+                        }}
                         required
-                        className="h-12 text-base bg-white border-border"
+                        readOnly={isVerified}
+                        className={`h-10 text-base bg-white border-border ${
+                            isVerified ? "cursor-not-allowed opacity-80" : ""
+                        }`}
                     />
+
+                    {isVerified ? (
+                        <div className="h-10 flex items-center justify-center px-3 text-green-500">
+                            <Check className="w-5 h-5" />
+                        </div>
+                    ) : (
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                            <DialogTrigger
+                                type="button"
+                                disabled={formData.phone.length < 9}
+                                className="h-10 flex items-center justify-center px-3 rounded-md text-sm transition-colors bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                                onClick={() => setIsDialogOpen(true)}
+                            >
+                                Verify
+                            </DialogTrigger>
+
+                            <DialogContent
+                                className="sm:w-[90%] p-1"
+                                onInteractOutside={(e) => e.preventDefault()}
+                            >
+                                <DialogTitle />
+                                <OTPVerification
+                                    phoneNumber={formData.phone}
+                                    onVerifySuccess={() => {
+                                        setIsVerified(true);
+                                        setIsDialogOpen(false);
+                                    }}
+                                />
+                            </DialogContent>
+                        </Dialog>
+                    )}
                 </div>
 
                 <div className="space-y-2">
@@ -86,7 +134,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                         required
 
                     >
-                        <SelectTrigger id="description" className="h-12 w-full text-base bg-white border-border">
+                        <SelectTrigger id="description" className="h-10 w-full text-base bg-white border-border">
                             <SelectValue placeholder="Select an option" />
                         </SelectTrigger>
                         <SelectContent>
@@ -100,10 +148,10 @@ export function WaitlistForm({setActiveComponent}: Props) {
                 </div>
 
                 <div className="pt-6 space-y-4">
-                    <Button type="submit" className="w-full h-12 text-base bg-[#1a1d2e] hover:bg-[#2a2d3e] text-white">
+                    <Button type="submit" disabled={!isVerified} className="w-full h-10 text-base bg-[#1a1d2e] hover:bg-[#2a2d3e] text-white">
                         Join Waitlist
                     </Button>
-                    <button onClick={()=>router.replace('/')} type="button" className="w-full text-base text-foreground/80 hover:text-foreground transition-colors">
+                    <button onClick={()=>router.replace('/')} type="button" className="w-full cursor-pointer border rounded-md py-2 text-base text-foreground/80 hover:text-foreground transition-colors">
                         Back to Website
                     </button>
                 </div>
