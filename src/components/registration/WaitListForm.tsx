@@ -77,7 +77,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                     <Input
                         id="name"
                         type="text"
-                        placeholder="Enter your full Name"
+                        placeholder="Enter your full name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
@@ -178,7 +178,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                             display="chip"
                             optionLabel="name"
                             placeholder="Select one or more options"
-                            className="w-full text-base"
+                            className="w-full text-base focus:outline-none focus:ring-0 focus:border-none"
                             maxSelectedLabels={3}
                             required
                             selectAllLabel="Select All"
