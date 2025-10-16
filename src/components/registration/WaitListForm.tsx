@@ -183,7 +183,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                             required
                             selectAllLabel="Select All"
                             pt={{
-                                root: { className: "focus:outline-none focus:ring-0 focus:border-none shadow-none" },
+                                root: { className: "focus:outline-none focus:ring-0 flex items-center focus:border-none shadow-none" },
                                 label: { className: "text-blue-500 text-sm" },
                                 token: { className: "rounded-full bg-blue-200" },
                             }}
