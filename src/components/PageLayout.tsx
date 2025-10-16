@@ -7,7 +7,7 @@ const PageLayout = ({children}: PropsWithChildren) => {
             <aside className="h-full w-[20%] max-w-[250px]">
                 <Sidebar />
             </aside>
-            <div className="flex-1 h-full">
+            <div className="flex-1 h-full p-4">
                 {children}
             </div>
         </div>

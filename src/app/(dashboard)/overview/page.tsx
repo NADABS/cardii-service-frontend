@@ -47,7 +47,7 @@ export default function OverviewPage() {
     }
 
     return (
-        <div className="w-full h-full pl-8 pr-4 pt-8 overflow-hidden">
+        <div className="w-full h-full overflow-hidden">
             <div className="w-full flex justify-between items-baseline">
                 <div>
                     <h1 className="text-2xl font-bold">Hello, John</h1>

@@ -53,7 +53,7 @@ const Sidebar = () => {
     }
 
     return (
-        <div className="w-full h-full flex flex-col justify-between border-r border-gray-200 p-6">
+        <div className="w-full h-full flex flex-col justify-between border-r border-gray-200 p-4">
             <div>
                 <div className="mt-4 font-bold text-2xl">Cardii</div>
                 <nav className="mt-6 flex flex-col gap-3">

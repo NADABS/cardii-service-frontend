@@ -82,10 +82,10 @@ export function ReusableTable<T extends Record<string, any>>({
     }, [data, query, searchable, columns]);
 
     return (
-        <>
-            <Card className="shadow-none border-none rounded-none">
+        <div className="h-full flex flex-col">
+            <Card className="shadow-none border-none rounded-none flex flex-col flex-grow p-0">
                 {cardHeaderData && (
-                    <CardHeader className="pb-2 px-4 ">{cardHeaderData}</CardHeader>
+                    <CardHeader className="pb-2 px-0 font-bold ">{cardHeaderData}</CardHeader>
                 )}
 
                 {searchable && (
@@ -99,7 +99,7 @@ export function ReusableTable<T extends Record<string, any>>({
                         />
                     </div>
                 )}
-                <Table className="border rounded-2xl">
+                <Table className="">
                     {caption && <TableCaption>{caption}</TableCaption>}
 
                     { showHeadersRow && (
@@ -173,10 +173,10 @@ export function ReusableTable<T extends Record<string, any>>({
             </Card>
 
             {onPageChange && (
-                <div className="flex justify-center mt-4">
+                <div className="flex justify-center mt-auto">
                     <Pagination meta={meta} loadPage={onPageChange} />
                 </div>
             )}
-        </>
+        </div>
     );
 }
