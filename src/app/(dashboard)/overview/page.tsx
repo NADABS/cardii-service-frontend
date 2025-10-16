@@ -23,6 +23,12 @@ export default function OverviewPage() {
 
     const [calendarDate, setCalendarDate] = useState(new Date());
 
+    const ordinalMap: Record<number, string> = {
+        1: "st",
+        2: "nd",
+        3: "rd",
+    }
+
     function handleDateSelect (date: Date) {
         setCalendarDate(date);
         const day = date.getDate();
@@ -31,15 +37,8 @@ export default function OverviewPage() {
 
         const getOrdinal = (n: number) => {
             if (n > 3 && n < 21) return "th";
-            switch (n % 10) {
-                case 1:
-                    return "st";
-                case 2:
-                    return "nd";
-                case 3:
-                    return "rd";
-                default:
-                    return "th";
+            else {
+                return ordinalMap[n%10] || "th"
             }
         };
 
