@@ -81,10 +81,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
-                        readOnly={isVerified}
-                        className={`h-10 text-base bg-white border-border ${
-                            isVerified ? "cursor-not-allowed opacity-80" : ""
-                        }`}
+                        className={`h-10 text-base bg-white border-border`}
                     />
                 </div>
 
@@ -99,10 +96,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
-                        readOnly={isVerified}
-                        className={`h-10 text-base bg-white border-border ${
-                            isVerified ? "cursor-not-allowed opacity-80" : ""
-                        }`}
+                        className={`h-10 text-base bg-white border-border`}
                     />
                 </div>
                 <div className="space-y-2">
