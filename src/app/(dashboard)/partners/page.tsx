@@ -1,97 +1,89 @@
 import TasksTable from "@/src/components/tasks/TasksTable";
 import IMeta from "@/src/types/Meta";
 import {Task} from "@/src/types/Task";
+import PartnersTable from "@/src/components/partners/PartnersTable";
 
 export default function PartnersPage () {
+
+     const mockPartners = [
+        {
+            externalId: "EXT-001",
+            internalId: "INT-1001",
+            name: "John Smith",
+            email: "john.smith@example.com",
+            phone: "+1-555-0101",
+            status: "verified",
+            preferredChannel: "email",
+            deviceType: "desktop",
+            location: "New York, USA",
+            createdAt: "2023-01-15T10:30:00Z"
+        },
+        {
+            externalId: "EXT-002",
+            internalId: "INT-1002",
+            name: "Maria Garcia",
+            email: "maria.garcia@example.com",
+            phone: "+1-555-0102",
+            status: "unverified",
+            preferredChannel: "sms",
+            deviceType: "mobile",
+            location: "Los Angeles, USA",
+            createdAt: "2023-02-20T14:45:00Z"
+        },
+        {
+            externalId: "EXT-003",
+            internalId: "INT-1003",
+            name: "David Johnson",
+            email: "david.johnson@example.com",
+            phone: "+1-555-0103",
+            status: "verified",
+            preferredChannel: "push",
+            deviceType: "tablet",
+            location: "Chicago, USA",
+            createdAt: "2023-03-10T09:15:00Z"
+        },
+        {
+            externalId: "EXT-004",
+            internalId: "INT-1004",
+            name: "Sarah Chen",
+            email: "sarah.chen@example.com",
+            phone: "+1-555-0104",
+            status: "verified",
+            preferredChannel: "email",
+            deviceType: "desktop",
+            location: "San Francisco, USA",
+            createdAt: "2023-04-05T16:20:00Z"
+        },
+        {
+            externalId: "EXT-005",
+            internalId: "INT-1005",
+            name: "Ahmed Hassan",
+            email: "ahmed.hassan@example.com",
+            phone: "+1-555-0105",
+            status: "unverified",
+            preferredChannel: "sms",
+            deviceType: "mobile",
+            location: "Toronto, Canada",
+            createdAt: "2023-05-12T11:00:00Z"
+        }
+    ];
+
 
     const meta: IMeta = {
         currentPage: 1,
         firstPage: 1,
-        lastPage: 5,
+        lastPage: 1,
         perPage: 10,
         nextPageUrl: "/api/items?page=2",
         prevPageUrl: "",
-        total: 50,
+        total: mockPartners.length,
     };
 
-    const tasks: Task[] = [
-        {
-            id: "1",
-            title: "Design Homepage Layout",
-            status: "In Progress",
-            completionRate: 65,
-            amount: 1500
-        },
-        {
-            id: "2",
-            title: "Write API Documentation",
-            status: "Completed",
-            completionRate: 100,
-            amount: 800
-        },
-        {
-            id: "3",
-            title: "Fix Login Bug",
-            status: "To Do",
-            completionRate: 0,
-            amount: 500
-        },
-        {
-            id: "4",
-            title: "Database Optimization",
-            status: "On Hold",
-            completionRate: 30,
-            amount: 2000
-        },
-        {
-            id: "5",
-            title: "Mobile App Testing",
-            status: "Completed",
-            completionRate: 100,
-            amount: 1200
-        },
-        {
-            id: "6",
-            title: "User Authentication System",
-            status: "In Progress",
-            completionRate: 80,
-            amount: 1800
-        },
-        {
-            id: "7",
-            title: "Deploy to Production",
-            status: "To Do",
-            completionRate: 0,
-            amount: 750
-        },
-        {
-            id: "8",
-            title: "Performance Monitoring Setup",
-            status: "In Progress",
-            completionRate: 45,
-            amount: 950
-        },
-        {
-            id: "9",
-            title: "Code Review Session",
-            status: "Completed",
-            completionRate: 100,
-            amount: 600
-        },
-        {
-            id: "10",
-            title: "Security Audit",
-            status: "To Do",
-            completionRate: 0,
-            amount: 3000
-        }
-    ];
-
     return (
-        <div className="w-full h-full px-2 pt-8 overflow-hidden">
-            <TasksTable
+        <div className="w-full h-full overflow-hidden">
+            <PartnersTable
                 meta={meta}
-                tasks={tasks}
+                partners={mockPartners}
             />
         </div>
     )
