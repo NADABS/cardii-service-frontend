@@ -69,7 +69,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
     return (
         <div className="w-full  flex flex-col items-center  rounded-lg pt-4 md:p-4">
 
-            <form onSubmit={handleSubmit} className="space-y-6 min-w-[60%] max-w-[80%] sm:justify-start">
+            <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-[400px] sm:justify-start">
                 <div className="space-y-2">
                     <Label htmlFor="name" className="text-base font-normal">
                         <span className="text-red-500">*</span>Name
@@ -178,11 +178,12 @@ export function WaitlistForm({setActiveComponent}: Props) {
                             display="chip"
                             optionLabel="name"
                             placeholder="Select one or more options"
-                            className="w-full text-base focus:outline-none focus:ring-0 focus:border-none"
+                            className="w-full h-10 rounded-md text-base focus:outline-none focus:ring-0 focus:border-none"
                             maxSelectedLabels={3}
                             required
                             selectAllLabel="Select All"
                             pt={{
+                                root: { className: "focus:outline-none focus:ring-0 focus:border-none shadow-none" },
                                 label: { className: "text-blue-500 text-sm" },
                                 token: { className: "rounded-full bg-blue-200" },
                             }}
