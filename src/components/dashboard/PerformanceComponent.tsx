@@ -23,112 +23,110 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-export const description = "An interactive area chart"
-
 const chartData = [
-    { date: "2024-04-01", desktop: 222, mobile: 150 },
-    { date: "2024-04-02", desktop: 97, mobile: 180 },
-    { date: "2024-04-03", desktop: 167, mobile: 520 },
-    { date: "2024-04-04", desktop: 242, mobile: 260 },
-    { date: "2024-04-05", desktop: 373, mobile: 290 },
-    { date: "2024-04-06", desktop: 301, mobile: 340 },
-    { date: "2024-04-07", desktop: 245, mobile: 180 },
-    { date: "2024-04-08", desktop: 409, mobile: 320 },
-    { date: "2024-04-09", desktop: 59, mobile: 110 },
-    { date: "2024-04-10", desktop: 261, mobile: 190 },
-    { date: "2024-04-11", desktop: 327, mobile: 350 },
-    { date: "2024-04-12", desktop: 292, mobile: 210 },
-    { date: "2024-04-13", desktop: 342, mobile: 380 },
-    { date: "2024-04-14", desktop: 137, mobile: 220 },
-    { date: "2024-04-15", desktop: 120, mobile: 170 },
-    { date: "2024-04-16", desktop: 138, mobile: 190 },
-    { date: "2024-04-17", desktop: 446, mobile: 360 },
-    { date: "2024-04-18", desktop: 364, mobile: 410 },
-    { date: "2024-04-19", desktop: 243, mobile: 180 },
-    { date: "2024-04-20", desktop: 89, mobile: 150 },
-    { date: "2024-04-21", desktop: 137, mobile: 200 },
-    { date: "2024-04-22", desktop: 224, mobile: 170 },
-    { date: "2024-04-23", desktop: 138, mobile: 230 },
-    { date: "2024-04-24", desktop: 387, mobile: 290 },
-    { date: "2024-04-25", desktop: 215, mobile: 250 },
-    { date: "2024-04-26", desktop: 75, mobile: 130 },
-    { date: "2024-04-27", desktop: 383, mobile: 420 },
-    { date: "2024-04-28", desktop: 122, mobile: 180 },
-    { date: "2024-04-29", desktop: 315, mobile: 240 },
-    { date: "2024-04-30", desktop: 454, mobile: 380 },
-    { date: "2024-05-01", desktop: 165, mobile: 220 },
-    { date: "2024-05-02", desktop: 293, mobile: 310 },
-    { date: "2024-05-03", desktop: 247, mobile: 190 },
-    { date: "2024-05-04", desktop: 385, mobile: 420 },
-    { date: "2024-05-05", desktop: 481, mobile: 390 },
-    { date: "2024-05-06", desktop: 498, mobile: 520 },
-    { date: "2024-05-07", desktop: 388, mobile: 300 },
-    { date: "2024-05-08", desktop: 149, mobile: 210 },
-    { date: "2024-05-09", desktop: 227, mobile: 180 },
-    { date: "2024-05-10", desktop: 293, mobile: 330 },
-    { date: "2024-05-11", desktop: 335, mobile: 270 },
-    { date: "2024-05-12", desktop: 197, mobile: 240 },
-    { date: "2024-05-13", desktop: 197, mobile: 160 },
-    { date: "2024-05-14", desktop: 448, mobile: 490 },
-    { date: "2024-05-15", desktop: 473, mobile: 380 },
-    { date: "2024-05-16", desktop: 338, mobile: 400 },
-    { date: "2024-05-17", desktop: 499, mobile: 420 },
-    { date: "2024-05-18", desktop: 315, mobile: 350 },
-    { date: "2024-05-19", desktop: 235, mobile: 180 },
-    { date: "2024-05-20", desktop: 177, mobile: 230 },
-    { date: "2024-05-21", desktop: 82, mobile: 140 },
-    { date: "2024-05-22", desktop: 81, mobile: 120 },
-    { date: "2024-05-23", desktop: 252, mobile: 290 },
-    { date: "2024-05-24", desktop: 294, mobile: 220 },
-    { date: "2024-05-25", desktop: 201, mobile: 250 },
-    { date: "2024-05-26", desktop: 213, mobile: 170 },
-    { date: "2024-05-27", desktop: 420, mobile: 460 },
-    { date: "2024-05-28", desktop: 233, mobile: 190 },
-    { date: "2024-05-29", desktop: 78, mobile: 130 },
-    { date: "2024-05-30", desktop: 340, mobile: 280 },
-    { date: "2024-05-31", desktop: 178, mobile: 230 },
-    { date: "2024-06-01", desktop: 178, mobile: 200 },
-    { date: "2024-06-02", desktop: 470, mobile: 410 },
-    { date: "2024-06-03", desktop: 103, mobile: 160 },
-    { date: "2024-06-04", desktop: 439, mobile: 380 },
-    { date: "2024-06-05", desktop: 88, mobile: 140 },
-    { date: "2024-06-06", desktop: 294, mobile: 250 },
-    { date: "2024-06-07", desktop: 323, mobile: 370 },
-    { date: "2024-06-08", desktop: 385, mobile: 320 },
-    { date: "2024-06-09", desktop: 438, mobile: 480 },
-    { date: "2024-06-10", desktop: 155, mobile: 200 },
-    { date: "2024-06-11", desktop: 92, mobile: 150 },
-    { date: "2024-06-12", desktop: 492, mobile: 420 },
-    { date: "2024-06-13", desktop: 81, mobile: 130 },
-    { date: "2024-06-14", desktop: 426, mobile: 380 },
-    { date: "2024-06-15", desktop: 307, mobile: 350 },
-    { date: "2024-06-16", desktop: 371, mobile: 310 },
-    { date: "2024-06-17", desktop: 475, mobile: 520 },
-    { date: "2024-06-18", desktop: 107, mobile: 170 },
-    { date: "2024-06-19", desktop: 341, mobile: 290 },
-    { date: "2024-06-20", desktop: 408, mobile: 450 },
-    { date: "2024-06-21", desktop: 169, mobile: 210 },
-    { date: "2024-06-22", desktop: 317, mobile: 270 },
-    { date: "2024-06-23", desktop: 480, mobile: 530 },
-    { date: "2024-06-24", desktop: 132, mobile: 180 },
-    { date: "2024-06-25", desktop: 141, mobile: 190 },
-    { date: "2024-06-26", desktop: 434, mobile: 380 },
-    { date: "2024-06-27", desktop: 448, mobile: 490 },
-    { date: "2024-06-28", desktop: 149, mobile: 200 },
-    { date: "2024-06-29", desktop: 103, mobile: 160 },
-    { date: "2024-06-30", desktop: 446, mobile: 400 },
+    { date: "2024-04-01", unverified: 222, verified: 150 },
+    { date: "2024-04-02", unverified: 97, verified: 180 },
+    { date: "2024-04-03", unverified: 167, verified: 520 },
+    { date: "2024-04-04", unverified: 242, verified: 260 },
+    { date: "2024-04-05", unverified: 373, verified: 290 },
+    { date: "2024-04-06", unverified: 301, verified: 340 },
+    { date: "2024-04-07", unverified: 245, verified: 180 },
+    { date: "2024-04-08", unverified: 409, verified: 320 },
+    { date: "2024-04-09", unverified: 59, verified: 110 },
+    { date: "2024-04-10", unverified: 261, verified: 190 },
+    { date: "2024-04-11", unverified: 327, verified: 350 },
+    { date: "2024-04-12", unverified: 292, verified: 210 },
+    { date: "2024-04-13", unverified: 342, verified: 380 },
+    { date: "2024-04-14", unverified: 137, verified: 220 },
+    { date: "2024-04-15", unverified: 120, verified: 170 },
+    { date: "2024-04-16", unverified: 138, verified: 190 },
+    { date: "2024-04-17", unverified: 446, verified: 360 },
+    { date: "2024-04-18", unverified: 364, verified: 410 },
+    { date: "2024-04-19", unverified: 243, verified: 180 },
+    { date: "2024-04-20", unverified: 89, verified: 150 },
+    { date: "2024-04-21", unverified: 137, verified: 200 },
+    { date: "2024-04-22", unverified: 224, verified: 170 },
+    { date: "2024-04-23", unverified: 138, verified: 230 },
+    { date: "2024-04-24", unverified: 387, verified: 290 },
+    { date: "2024-04-25", unverified: 215, verified: 250 },
+    { date: "2024-04-26", unverified: 75, verified: 130 },
+    { date: "2024-04-27", unverified: 383, verified: 420 },
+    { date: "2024-04-28", unverified: 122, verified: 180 },
+    { date: "2024-04-29", unverified: 315, verified: 240 },
+    { date: "2024-04-30", unverified: 454, verified: 380 },
+    { date: "2024-05-01", unverified: 165, verified: 220 },
+    { date: "2024-05-02", unverified: 293, verified: 310 },
+    { date: "2024-05-03", unverified: 247, verified: 190 },
+    { date: "2024-05-04", unverified: 385, verified: 420 },
+    { date: "2024-05-05", unverified: 481, verified: 390 },
+    { date: "2024-05-06", unverified: 498, verified: 520 },
+    { date: "2024-05-07", unverified: 388, verified: 300 },
+    { date: "2024-05-08", unverified: 149, verified: 210 },
+    { date: "2024-05-09", unverified: 227, verified: 180 },
+    { date: "2024-05-10", unverified: 293, verified: 330 },
+    { date: "2024-05-11", unverified: 335, verified: 270 },
+    { date: "2024-05-12", unverified: 197, verified: 240 },
+    { date: "2024-05-13", unverified: 197, verified: 160 },
+    { date: "2024-05-14", unverified: 448, verified: 490 },
+    { date: "2024-05-15", unverified: 473, verified: 380 },
+    { date: "2024-05-16", unverified: 338, verified: 400 },
+    { date: "2024-05-17", unverified: 499, verified: 420 },
+    { date: "2024-05-18", unverified: 315, verified: 350 },
+    { date: "2024-05-19", unverified: 235, verified: 180 },
+    { date: "2024-05-20", unverified: 177, verified: 230 },
+    { date: "2024-05-21", unverified: 82, verified: 140 },
+    { date: "2024-05-22", unverified: 81, verified: 120 },
+    { date: "2024-05-23", unverified: 252, verified: 290 },
+    { date: "2024-05-24", unverified: 294, verified: 220 },
+    { date: "2024-05-25", unverified: 201, verified: 250 },
+    { date: "2024-05-26", unverified: 213, verified: 170 },
+    { date: "2024-05-27", unverified: 420, verified: 460 },
+    { date: "2024-05-28", unverified: 233, verified: 190 },
+    { date: "2024-05-29", unverified: 78, verified: 130 },
+    { date: "2024-05-30", unverified: 340, verified: 280 },
+    { date: "2024-05-31", unverified: 178, verified: 230 },
+    { date: "2024-06-01", unverified: 178, verified: 200 },
+    { date: "2024-06-02", unverified: 470, verified: 410 },
+    { date: "2024-06-03", unverified: 103, verified: 160 },
+    { date: "2024-06-04", unverified: 439, verified: 380 },
+    { date: "2024-06-05", unverified: 88, verified: 140 },
+    { date: "2024-06-06", unverified: 294, verified: 250 },
+    { date: "2024-06-07", unverified: 323, verified: 370 },
+    { date: "2024-06-08", unverified: 385, verified: 320 },
+    { date: "2024-06-09", unverified: 438, verified: 480 },
+    { date: "2024-06-10", unverified: 155, verified: 200 },
+    { date: "2024-06-11", unverified: 92, verified: 150 },
+    { date: "2024-06-12", unverified: 492, verified: 420 },
+    { date: "2024-06-13", unverified: 81, verified: 130 },
+    { date: "2024-06-14", unverified: 426, verified: 380 },
+    { date: "2024-06-15", unverified: 307, verified: 350 },
+    { date: "2024-06-16", unverified: 371, verified: 310 },
+    { date: "2024-06-17", unverified: 475, verified: 520 },
+    { date: "2024-06-18", unverified: 107, verified: 170 },
+    { date: "2024-06-19", unverified: 341, verified: 290 },
+    { date: "2024-06-20", unverified: 408, verified: 450 },
+    { date: "2024-06-21", unverified: 169, verified: 210 },
+    { date: "2024-06-22", unverified: 317, verified: 270 },
+    { date: "2024-06-23", unverified: 480, verified: 530 },
+    { date: "2024-06-24", unverified: 132, verified: 180 },
+    { date: "2024-06-25", unverified: 141, verified: 190 },
+    { date: "2024-06-26", unverified: 434, verified: 380 },
+    { date: "2024-06-27", unverified: 448, verified: 490 },
+    { date: "2024-06-28", unverified: 149, verified: 200 },
+    { date: "2024-06-29", unverified: 103, verified: 160 },
+    { date: "2024-06-30", unverified: 446, verified: 400 },
 ]
 
 const chartConfig = {
     visitors: {
         label: "Visitors",
     },
-    desktop: {
-        label: "Desktop",
+    unverified: {
+        label: "Unverified Partners",
         color: "#EBB37F",
     },
-    mobile: {
-        label: "Mobile",
+    verified: {
+        label: "Verified Partners",
         color: "#79A2CD",
     },
 } satisfies ChartConfig
@@ -183,31 +181,31 @@ export function PerformanceComponent() {
                 >
                     <AreaChart
                         margin={{
-                        left: -20,
+                            left: -20,
                         }}
                         data={filteredData}>
                         <defs>
-                            <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                            <linearGradient id="fillUnverified" x1="0" y1="0" x2="0" y2="1">
                                 <stop
                                     offset="5%"
-                                    stopColor="var(--color-desktop)"
+                                    stopColor="var(--color-unverified)"
                                     stopOpacity={0.8}
                                 />
                                 <stop
                                     offset="95%"
-                                    stopColor="var(--color-desktop)"
+                                    stopColor="var(--color-unverified)"
                                     stopOpacity={0.1}
                                 />
                             </linearGradient>
-                            <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                            <linearGradient id="fillVerified" x1="0" y1="0" x2="0" y2="1">
                                 <stop
                                     offset="5%"
-                                    stopColor="var(--color-mobile)"
+                                    stopColor="var(--color-verified)"
                                     stopOpacity={0.8}
                                 />
                                 <stop
                                     offset="95%"
-                                    stopColor="var(--color-mobile)"
+                                    stopColor="var(--color-verified)"
                                     stopOpacity={0.1}
                                 />
                             </linearGradient>
@@ -232,6 +230,7 @@ export function PerformanceComponent() {
                             cursor={false}
                             content={
                                 <ChartTooltipContent
+                                    className="min-w-[200px]"
                                     labelFormatter={(value) => {
                                         return new Date(value).toLocaleDateString("en-US", {
                                             month: "short",
@@ -243,17 +242,17 @@ export function PerformanceComponent() {
                             }
                         />
                         <Area
-                            dataKey="mobile"
+                            dataKey="verified"
                             type="natural"
-                            fill="url(#fillMobile)"
-                            stroke="var(--color-mobile)"
+                            fill="url(#fillVerified)"
+                            stroke="var(--color-verified)"
                             stackId="a"
                         />
                         <Area
-                            dataKey="desktop"
+                            dataKey="unverified"
                             type="natural"
-                            fill="url(#fillDesktop)"
-                            stroke="var(--color-desktop)"
+                            fill="url(#fillUnverified)"
+                            stroke="var(--color-unverified)"
                             stackId="a"
                         />
                     </AreaChart>

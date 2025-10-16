@@ -126,10 +126,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
-                        readOnly={isVerified}
-                        className={`h-10 text-base bg-white border-border ${
-                            isVerified ? "cursor-not-allowed opacity-80" : ""
-                        }`}
+                        className={`h-10 text-base bg-white border-border`}
                     />
                 </div>
 
@@ -144,10 +141,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
-                        readOnly={isVerified}
-                        className={`h-10 text-base bg-white border-border ${
-                            isVerified ? "cursor-not-allowed opacity-80" : ""
-                        }`}
+                        className={`h-10 text-base bg-white border-border`}
                     />
                 </div>
                 <div className="space-y-2">
@@ -228,7 +222,7 @@ export function WaitlistForm({setActiveComponent}: Props) {
                             required
                             selectAllLabel="Select All"
                             pt={{
-                                root: { className: "focus:outline-none focus:ring-0 focus:border-none shadow-none" },
+                                root: { className: "focus:outline-none focus:ring-0 flex items-center focus:border-none shadow-none" },
                                 label: { className: "text-blue-500 text-sm" },
                                 token: { className: "rounded-full bg-blue-200" },
                             }}

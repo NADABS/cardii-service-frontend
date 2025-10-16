@@ -3,7 +3,7 @@ import React from 'react'
 import {CiSearch, CiWavePulse1} from "react-icons/ci";
 import {IoTerminalOutline} from "react-icons/io5";
 import {ReusableTable} from "@/src/components/ReusableTable";
-import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {formatStatus, statusColourMap} from "@/src/lib/utils";
 import {HiClock} from "react-icons/hi2";
 import {BsThreeDots} from "react-icons/bs";
@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import StatusBadge from "@/src/components/StatusBadge";
+import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 
 
 export const CurrentTasksTable = () => {
@@ -37,38 +39,50 @@ export const CurrentTasksTable = () => {
         return "Date Range"
     }
 
-    const tasks = [
-        {title:{
-                icon: <CiWavePulse1 />,
-                text: "Product Review for UI Market"
-            },
-            status: "In Progress",
-            duration: 4,
-        },
-        { title: {
-            icon: <CiSearch />,
-            text: "UX Research for Product"
-            },
-            status: "On Hold",
-            duration: 6,
+    const headers = ["Name", "Email", "Phone", "Status", ""];
+
+    const partners = [{
+        externalId: "EXT-003",
+        internalId: "INT-1003",
+        name: "David Johnson",
+        email: "david.johnson@example.com",
+        phone: "+1-555-0103",
+        status: "verified",
+        preferredChannel: "push",
+        deviceType: "tablet",
+        location: "Chicago, USA",
+        createdAt: "2023-03-10T09:15:00Z"
+    },
+        {
+            externalId: "EXT-004",
+            internalId: "INT-1004",
+            name: "Sarah Chen",
+            email: "sarah.chen@example.com",
+            phone: "+1-555-0104",
+            status: "verified",
+            preferredChannel: "email",
+            deviceType: "desktop",
+            location: "San Francisco, USA",
+            createdAt: "2023-04-05T16:20:00Z"
         },
         {
-            title: {
-                icon: <IoTerminalOutline />,
-                text: "App Design and Development"
-            },
-            status: "Done",
-            duration: 16,
-        }
-    ]
+            externalId: "EXT-005",
+            internalId: "INT-1005",
+            name: "Ahmed Hassan",
+            email: "ahmed.hassan@example.com",
+            phone: "+1-555-0105",
+            status: "unverified",
+            preferredChannel: "sms",
+            deviceType: "mobile",
+            location: "Toronto, Canada",
+            createdAt: "2023-05-12T11:00:00Z"
+        }]
 
     return (
         <div className="mt-6">
             <div className="flex items-center justify-between gap-4 py-4">
                 <div className="flex items-center gap-6">
-                    <h1 className="text-2xl font-bold">Current Tasks</h1>
-                    <div className="h-6 w-px bg-border" />
-                    <span className="text-muted-foreground">Done 30%</span>
+                    <h1 className="text-2xl font-bold">Recently Onboarded Partners</h1>
                 </div>
 
                 <Popover>
@@ -83,7 +97,6 @@ export const CurrentTasksTable = () => {
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="end">
                         <Calendar
-                            initialFocus
                             mode="range"
                             defaultMonth={date?.from}
                             selected={date}
@@ -94,31 +107,37 @@ export const CurrentTasksTable = () => {
             </div>
 
         <Table>
-
+            <TableHeader>
+                <TableRow>
+                    {headers.map((header, index) => (
+                        <TableHead key={index}>{header}</TableHead>
+                    ))}
+                </TableRow>
+            </TableHeader>
             <TableBody>
-                {tasks.map((task, index)=> (
-                    <TableRow key={index} >
-                        <TableCell>
-                            <div className="flex items-center space-x-2">
-                                <div className="w-6 h-6 rounded-full bg-[#DFE5EF] flex justify-center items-center">
-                                    {task.title.icon}
-                                </div>
-                                <p>{task.title.text}</p>
-                            </div>
-                        </TableCell>
-                        <TableCell>
-                            <div className="w-full items-center flex space-x-2">
-                                <div className={`w-3 h-3 rounded-full ${statusColourMap[formatStatus(task.status)]}`} />
-                                <p>{task.status}</p>
-                            </div>
-                        </TableCell>
-                        <TableCell>
-                            <div className="w-full items-center flex space-x-2">
-                                <HiClock size={20} color={"#E5E7EB"}/>
-                                <p>{task.duration} hrs</p>
-                            </div>
-                        </TableCell>
-                        <TableCell><BsThreeDots /></TableCell>
+                {partners.map((partner, index) => (
+                    <TableRow key={index}>
+                        <TableCell>{partner.name}</TableCell>
+                        <TableCell>{partner.email}</TableCell>
+                        <TableCell>{partner.phone}</TableCell>
+                        <TableCell><StatusBadge status={partner.status} /></TableCell>
+                        <TableCell><Dialog>
+                            <DialogTrigger asChild>
+                                <button
+                                    className="text-gray-400 font-bold">
+                                    <BsThreeDots className="h-4 w-4" />
+                                </button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogTitle>Name: {partner.name}</DialogTitle>
+                                <p>Id: {partner.internalId}</p>
+                                <p>Email: {partner.email}</p>
+                                <p>Status: {partner.status}</p>
+                                <p>Date Registered: {partner.createdAt}</p>
+                                <p>Preferred Channel: {partner.preferredChannel}</p>
+                                <p>Location: {partner.location}</p>
+                            </DialogContent>
+                        </Dialog></TableCell>
                     </TableRow>
                 ))}
             </TableBody>
