@@ -6,17 +6,16 @@ import { InputGroup } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label"
 import {useRouter} from "next/navigation";
 import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
-import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog";
 import {OTPVerification} from "@/src/components/registration/OTPVerification";
 import {Check, ChevronDown} from "lucide-react";
 import { MultiSelect, MultiSelectChangeEvent } from 'primereact/multiselect';
 import {Drawer, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer";
 import {useMutation} from "@tanstack/react-query";
-import {httpPOSTWithoutAuth} from "@/src/lib/http-client";
 import {toJsonString} from "@/src/lib/storage";
-import process from "node:process";
 import {handleError} from "@/src/lib/errorHandler";
-import {apiBaseUrl} from "@/src/lib/utils";
+import process from "node:process";
+import {httpPOST} from "@/src/lib/http-client";
 
 interface OptionType {
     name: string;
@@ -49,9 +48,11 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
 
     const router = useRouter();
 
+    const apiBaseUrl = process.env.NEXT_PUBLIC_CARDII_API_BASE_URL;
+
     const sendOTPMutation = useMutation({
         mutationFn: async (postRequest: any) => {
-            const response = await httpPOSTWithoutAuth(
+            const response = await httpPOST(
                 `${apiBaseUrl}/v1/otp/send`,
                 toJsonString(postRequest),
                 { "Content-Type": "application/json" }
@@ -71,7 +72,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
 
     const registerPartnerMutation = useMutation({
         mutationFn: async (postRequest: any) => {
-            const response = await httpPOSTWithoutAuth(
+            const response = await httpPOST(
                 `${apiBaseUrl}/v1/partners`,
                 toJsonString(postRequest),
                 {

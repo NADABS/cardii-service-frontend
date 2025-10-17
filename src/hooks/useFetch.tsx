@@ -1,16 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import {httpGETWithoutAuth} from "@/src/lib/http-client";
+import {httpGET} from "@/src/lib/http-client";
 
-export default function useFetchWithoutAuth(
+export default function useFetch(
     url: string,
     queryKey: any[],
     headers = {},
+    token: string | null = null,
     isEnabled = true
 ) {
     const { data, isLoading, error, refetch, isFetching } = useQuery({
         enabled: isEnabled,
         queryFn: async () => {
-            const response = await httpGETWithoutAuth(url, headers);
+            const response = await httpGET(url, headers, token);
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "An error occurred");

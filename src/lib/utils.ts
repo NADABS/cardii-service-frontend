@@ -100,5 +100,3 @@ export function parseApiError(
         errors: error?.response?.data?.data || {},
     };
 }
-
-export const apiBaseUrl = "https://06da2f53-7a73-46cd-acef-0e8da2f80a70.mock.pstmn.io"

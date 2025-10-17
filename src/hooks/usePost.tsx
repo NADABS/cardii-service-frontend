@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import {httpPUTWithoutAuth} from "@/src/lib/http-client";
 import {toJsonString} from "@/src/lib/storage";
+import {httpPOST} from "@/src/lib/http-client";
 
-export default function usePutWithoutAuth(url: string) {
+export default function usePost(url: string) {
     const mutation = useMutation({
-        mutationFn: async (putRequest: any) => {
-            const response = await httpPUTWithoutAuth(url, toJsonString(putRequest), {
+        mutationFn: async (postRequest: any) => {
+            const response = await httpPOST(url, toJsonString(postRequest), {
                 "Content-Type": "application/json",
             });
 

@@ -3,11 +3,11 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import {httpPOSTWithoutAuth} from "@/src/lib/http-client";
 import {toJsonString} from "@/src/lib/storage";
 import {useMutation} from "@tanstack/react-query";
-import {apiBaseUrl} from "@/src/lib/utils";
 import {handleError} from "@/src/lib/errorHandler";
+import process from "node:process";
+import {httpPOST} from "@/src/lib/http-client";
 
 interface OTPVerificationProps {
     phoneNumber: string
@@ -89,11 +89,12 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
 
     const maskedPhone = phoneNumber.replace(/\d(?=\d{3})/g, "*")
 
+    const apiBaseUrl = process.env.NEXT_PUBLIC_CARDII_API_BASE_URL;
 
     const mutation = useMutation({
         mutationFn: async (postRequest: any) => {
-            const response = await httpPOSTWithoutAuth(
-                `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/otp/verify`,
+            const response = await httpPOST(
+                `${apiBaseUrl}/v1/otp/verify`,
                 toJsonString(postRequest),
                 {
                     "Content-Type": "application/json",
@@ -114,7 +115,7 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
 
     const reSendOTP = useMutation({
         mutationFn: async (postRequest: any) => {
-            const response = await httpPOSTWithoutAuth(
+            const response = await httpPOST(
                 `${apiBaseUrl}/v1/otp/send`,
                 toJsonString(postRequest),
                 { "Content-Type": "application/json" }
