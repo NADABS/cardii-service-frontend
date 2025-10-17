@@ -1,18 +1,33 @@
 'use client';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
 import {WaitlistForm} from "@/src/components/registration/WaitListForm";
-import {OTPVerification} from "@/src/components/registration/OTPVerification";
 import {SuccessScreen} from "@/src/components/registration/SuccessScreen";
+import {handleError} from "@/src/lib/errorHandler";
+import useFetch from "@/src/hooks/useFetch";
 
 export default function RegisterPage() {
 
     const [activeComponent, setActiveComponent] = useState<RegistrationComponent>("waitlistForm");
 
+    const {data: interestCategories, isLoading, error} = useFetch(
+        `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/interest-categories`, ["interestCategories"]
+    )
+
     const registrationComponents: Record<string, React.ReactNode> = {
-        waitlistForm: <WaitlistForm setActiveComponent={setActiveComponent}/>,
+        waitlistForm: <WaitlistForm
+                        setActiveComponent={setActiveComponent}
+                        interestCategories={interestCategories?.data ?? []}
+        />,
         success: <SuccessScreen/>
     }
+
+    useEffect(() => {
+        if (error) {
+            handleError(error);
+        }
+    }, []);
+
 
     return (
         <div className="w-full  flex flex-col items-center justify-center">

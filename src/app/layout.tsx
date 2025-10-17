@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
+import TanstackQueryProvider from "@/src/lib/providers/TanstackQueryProvider";
+import {Toaster} from "@/components/ui/sonner";
 
 const dmSans = DM_Sans({
     subsets: ["latin"],
@@ -21,7 +23,10 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className={`${dmSans.variable} font-sans antialiased`}>
-        {children}
+        <TanstackQueryProvider>
+            {children}
+            <Toaster position={"top-center"} duration={4000} />
+        </TanstackQueryProvider>
         </body>
         </html>
     );

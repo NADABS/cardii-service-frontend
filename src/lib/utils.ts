@@ -1,6 +1,7 @@
 // lib/utils.ts
 import { clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import {ParsedError} from "@/src/types/ApiError";
 
 export function cn(...inputs: any[]) {
     return twMerge(clsx(inputs))
@@ -58,3 +59,51 @@ export const getInitials = (name: string) => {
     }
     return "";
 };
+
+
+export function capitalize(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+export function extractErrorsLabeled(
+    errorData: Record<string, string[]>
+): string[] {
+    return Object.entries(errorData).flatMap(([field, messages]) =>
+        messages.map((msg) => `${capitalize(field)}: ${msg}`)
+    );
+}
+
+export function parseApiError(
+    error: any,
+    fallbackMessage = "An unknown error occurred"
+): ParsedError {
+    try {
+        if (error.__custom) {
+            return {
+                status: error.status ?? 500,
+                message: error.message ?? fallbackMessage,
+                errors: error.errors ?? {},
+            };
+        }
+    } catch {
+        return {
+            status: error?.response?.status ?? 500,
+            message:
+                error?.response?.data?.message || error?.message || fallbackMessage,
+            errors: error?.response?.data?.data || {},
+        };
+    }
+
+    return {
+        status: error?.response?.status ?? 500,
+        message: error?.message || fallbackMessage,
+        errors: error?.response?.data?.data || {},
+    };
+}
+
+export function capitalizeFirstLetter(string: string | null) {
+    if (typeof string !== 'string' || string.length === 0) {
+        return string;
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
