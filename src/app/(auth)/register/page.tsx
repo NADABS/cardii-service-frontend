@@ -3,7 +3,6 @@ import React, {useEffect, useState} from "react";
 import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
 import {WaitlistForm} from "@/src/components/registration/WaitListForm";
 import {SuccessScreen} from "@/src/components/registration/SuccessScreen";
-import * as process from "node:process";
 import {handleError} from "@/src/lib/errorHandler";
 import useFetch from "@/src/hooks/useFetch";
 

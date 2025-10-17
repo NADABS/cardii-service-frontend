@@ -14,8 +14,8 @@ import {Drawer, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/
 import {useMutation} from "@tanstack/react-query";
 import {toJsonString} from "@/src/lib/storage";
 import {handleError} from "@/src/lib/errorHandler";
-import process from "node:process";
 import {httpPOST} from "@/src/lib/http-client";
+import {capitalizeFirstLetter} from "@/src/lib/utils";
 
 interface OptionType {
     name: string;
@@ -227,7 +227,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                     <Label htmlFor="description" className="text-base font-normal">
                         <span className="text-red-500">*</span>What Best Describes You?
                     </Label>
-                    <div className="hidden md:block">
+                    <div className="hidden md:block ">
                         <MultiSelect
                             id="description"
                             value={formData.interestCategoryIds}
@@ -236,14 +236,16 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                             display="chip"
                             optionLabel="name"
                             placeholder="Select one or more options"
-                            className="w-full h-10 rounded-md text-base focus:outline-none focus:ring-0 focus:border-none"
+                            className="w-full h-10 rounded-md text-base capitalize focus:outline-none focus:ring-0 focus:border-none"
                             maxSelectedLabels={3}
                             required
                             selectAllLabel="Select All"
                             pt={{
-                                root: { className: "focus:outline-none focus:ring-0 flex items-center focus:border-none shadow-none" },
-                                label: { className: "text-blue-500 text-sm" },
-                                token: { className: "rounded-full bg-blue-200" },
+                                root: { className: "focus:outline-none focus:ring-0 flex items-center focus:border-none capitalize shadow-none" },
+                                label: { className: "text-blue-500 text-sm capitalize" },
+                                token: { className: "rounded-full bg-blue-200 capitalize" },
+                                item: { className: "capitalize" },
+                                list: { className: "capitalize" },
                             }}
                         />
                     </div>
@@ -254,11 +256,11 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                             onClick={() => setIsDrawerOpen(true)}
                             className="w-full h-10 px-3 text-base bg-white border border-border rounded-md flex items-center justify-between hover:bg-gray-50 transition-colors"
                         >
-              <span className={formData.interestCategoryIds.length === 0 ? "text-muted-foreground" : "text-foreground"}>
-                {formData.interestCategoryIds.length === 0
-                    ? "Select one or more options"
-                    : `${formData.interestCategoryIds.length} selected`}
-              </span>
+                            <span className={formData.interestCategoryIds.length === 0 ? "text-muted-foreground" : "text-foreground"}>
+                                {formData.interestCategoryIds.length === 0
+                                    ? "Select one or more options"
+                                : `${formData.interestCategoryIds.length} selected`}
+                            </span>
                             <ChevronDown className="w-4 h-4 text-muted-foreground" />
                         </button>
 
@@ -269,8 +271,8 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                                         key={item.externalId}
                                         className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full"
                                     >
-                    {item.name}
-                  </span>
+                                        {capitalizeFirstLetter(item.name)}
+                                    </span>
                                 ))}
                             </div>
                         )}
@@ -296,7 +298,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                                             }`}
                                         >
                                             <div className="flex items-center justify-between">
-                                                <span className="text-base">{option.name}</span>
+                                                <span className="text-base">{capitalizeFirstLetter(option.name)}</span>
                                                 {isSelected && <Check className="w-5 h-5 text-blue-500" />}
                                             </div>
                                         </button>

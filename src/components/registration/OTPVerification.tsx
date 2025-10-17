@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import {toJsonString} from "@/src/lib/storage";
 import {useMutation} from "@tanstack/react-query";
 import {handleError} from "@/src/lib/errorHandler";
-import process from "node:process";
 import {httpPOST} from "@/src/lib/http-client";
 
 interface OTPVerificationProps {
