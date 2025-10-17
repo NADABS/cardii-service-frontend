@@ -3,26 +3,24 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
-import {useMutation} from "@tanstack/react-query";
 import {httpPOSTWithoutAuth} from "@/src/lib/http-client";
 import {toJsonString} from "@/src/lib/storage";
+import {useMutation} from "@tanstack/react-query";
+import {apiBaseUrl} from "@/src/lib/utils";
+import {handleError} from "@/src/lib/errorHandler";
 
 interface OTPVerificationProps {
     phoneNumber: string
     onVerifySuccess: () => void
     onBack?: () => void
+
 }
 
 export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVerificationProps) {
     const [otpInput, setOtpInput] = useState<string[]>(["", "", "", "", "", ""])
     const [countdown, setCountdown] = useState(34)
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-    const [errorMessage, setErrorMessage] = useState("");
-    const [validationErrors, setValidationErrors] = useState({
-        phoneNumber: [],
-        otp: []
-    })
+
 
     useEffect(() => {
         if (countdown > 0) {
@@ -79,15 +77,6 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
         inputRefs.current[nextIndex]?.focus()
     }
 
-    const handleResend = () => {
-        if (countdown === 0) {
-            setCountdown(34)
-            setOtpInput(["", "", "", "", "", ""])
-            inputRefs.current[0]?.focus()
-            console.log("Resending OTP...")
-        }
-    }
-
     const handleVerify = () => {
         const otpValue = otpInput.join("")
         if (otpValue.length === 6) {
@@ -111,30 +100,41 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
                 }
             );
 
-            if (response.ok) {
-                onVerifySuccess()
-                return response
-            } else {
-                const errorData = await response.json().catch(() => null);
-                if (response.status === 422) {
-                    const _validationErrors = errorData.errors;
-                    setValidationErrors(_validationErrors);
-                    throw new Error();
-                } else {
-                    setErrorMessage(errorData.errors);
-                    throw new Error(
-                        errorData?.message ||
-                        `Error ${response.status}: ${response.statusText}`
-                    );
-                }
-            }
 
-            return await response.json();
+            return response.json();
         },
-        onSuccess: (data) => {
+        onSuccess: () => {
+            onVerifySuccess()
+        },
+        onError: (error) => {
+            handleError(error)
+        }
+    });
 
+
+    const reSendOTP = useMutation({
+        mutationFn: async (postRequest: any) => {
+            const response = await httpPOSTWithoutAuth(
+                `${apiBaseUrl}/v1/otp/send`,
+                toJsonString(postRequest),
+                { "Content-Type": "application/json" }
+            );
+
+            return response.json();
+        },
+        onError: (error) => {
+            handleError(error)
         },
     });
+
+    const handleResend = () => {
+        if (countdown === 0) {
+            setCountdown(34)
+            setOtpInput(["", "", "", "", "", ""])
+            inputRefs.current[0]?.focus()
+            reSendOTP.mutate({phoneNumber: phoneNumber})
+        }
+    }
 
     return (
         <div className="w-full max-w-full p-1 md:p-3">

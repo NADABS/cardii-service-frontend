@@ -1,18 +1,38 @@
 'use client';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
 import {WaitlistForm} from "@/src/components/registration/WaitListForm";
 import {OTPVerification} from "@/src/components/registration/OTPVerification";
 import {SuccessScreen} from "@/src/components/registration/SuccessScreen";
+import useFetchWithoutAuth from "@/src/hooks/useFetchWithoutAuth";
+import * as process from "node:process";
+import {handleError} from "@/src/lib/errorHandler";
+import {apiBaseUrl} from "@/src/lib/utils";
 
 export default function RegisterPage() {
 
     const [activeComponent, setActiveComponent] = useState<RegistrationComponent>("waitlistForm");
 
+    const {data: interestCategories, isLoading, error} = useFetchWithoutAuth(
+        `${apiBaseUrl}/v1/interest-categories`, ["interestCategories"]
+    )
+
     const registrationComponents: Record<string, React.ReactNode> = {
-        waitlistForm: <WaitlistForm setActiveComponent={setActiveComponent}/>,
+        waitlistForm: <WaitlistForm
+                        setActiveComponent={setActiveComponent}
+                        interestCategories={interestCategories?.data ?? []}
+        />,
         success: <SuccessScreen/>
     }
+
+    useEffect(() => {
+        if (error) {
+            handleError(error);
+        }
+    }, []);
+
+    useEffect(() => {
+    }, []);
 
     return (
         <div className="w-full  flex flex-col items-center justify-center">
