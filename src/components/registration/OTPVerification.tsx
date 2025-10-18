@@ -1,8 +1,8 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import {useState, useRef, useEffect} from "react"
+import {Button} from "@/components/ui/button"
 import {toJsonString} from "@/src/lib/storage";
 import {useMutation} from "@tanstack/react-query";
 import {handleError} from "@/src/lib/errorHandler";
@@ -15,9 +15,9 @@ interface OTPVerificationProps {
 
 }
 
-export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVerificationProps) {
+export function OTPVerification({phoneNumber, onVerifySuccess, onBack,}: OTPVerificationProps) {
     const [otpInput, setOtpInput] = useState<string[]>(["", "", "", "", "", ""])
-    const [countdown, setCountdown] = useState(34)
+    const [countdown, setCountdown] = useState(60)
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
 
@@ -94,14 +94,17 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
         mutationFn: async (postRequest: any) => {
             const response = await httpPOST(
                 `${apiBaseUrl}/v1/otp/verify`,
-                toJsonString(postRequest),
+                postRequest,
                 {
                     "Content-Type": "application/json",
                 }
             );
 
+            const {data, status} = response;
 
-            return response.json();
+            if (!data.success) throw new Error(data.message || 'Request failed');
+
+            return data;
         },
         onSuccess: () => {
             onVerifySuccess()
@@ -111,16 +114,19 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
         }
     });
 
-
     const reSendOTP = useMutation({
         mutationFn: async (postRequest: any) => {
             const response = await httpPOST(
                 `${apiBaseUrl}/v1/otp/send`,
-                toJsonString(postRequest),
-                { "Content-Type": "application/json" }
+                postRequest,
+                {"Content-Type": "application/json"}
             );
 
-            return response.json();
+            const {data, status} = response;
+
+            if (!data.success) throw new Error(data.message || 'Request failed');
+
+            return data;
         },
         onError: (error) => {
             handleError(error)
@@ -142,7 +148,7 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
                 <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Enter OTP</h1>
                 <p className="text-sm text-foreground/80 leading-relaxed">
                     A one time OTP has been sent to your phone number ending {maskedPhone}
-                    <br />
+                    <br/>
                     Enter the OTP to join the Cardii waitlist
                 </p>
             </div>
@@ -178,7 +184,8 @@ export function OTPVerification({ phoneNumber, onVerifySuccess, onBack, }: OTPVe
                         }`}
                     >
                         Resend
-                    </button>{" "}
+                    </button>
+                    {" "}
                     {countdown > 0 && `in ${countdown} secs`}
                 </div>
 

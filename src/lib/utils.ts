@@ -1,6 +1,6 @@
 // lib/utils.ts
-import { clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import {clsx} from "clsx"
+import {twMerge} from "tailwind-merge"
 import {ParsedError} from "@/src/types/ApiError";
 
 export function cn(...inputs: any[]) {
@@ -11,7 +11,7 @@ export const getToday = (): string => {
     const date = new Date();
 
     const day = date.getDate();
-    const month = date.toLocaleString("en-US", { month: "long" });
+    const month = date.toLocaleString("en-US", {month: "long"});
     const year = date.getFullYear();
 
     const getOrdinal = (n: number) => {
@@ -69,36 +69,54 @@ export function extractErrorsLabeled(
     errorData: Record<string, string[]>
 ): string[] {
     return Object.entries(errorData).flatMap(([field, messages]) =>
-        messages.map((msg) => `${capitalize(field)}: ${msg}`)
+        messages.map((_message) => `${capitalize(field)}: ${_message}`)
     );
 }
 
-export function parseApiError(
-    error: any,
-    fallbackMessage = "An unknown error occurred"
-): ParsedError {
+/**
+ * 🧩 Parses errors gracefully — supports Axios, Laravel 422, custom thrown, and fetch-like errors.
+ */
+export function parseApiError(error: any, fallbackMessage = "An unknown error occurred") {
+    let status = 500;
+    let message = fallbackMessage;
+    let errors: Record<string, string[]> = {};
+
     try {
-        if (error.__custom) {
-            return {
-                status: error.status ?? 500,
-                message: error.message ?? fallbackMessage,
-                errors: error.errors ?? {},
-            };
+        // 🧱 Axios error format
+        if (error?.response) {
+            const res = error.response;
+            status = res.status ?? 500;
+            const data = res.data || {};
+
+            message = data.message || fallbackMessage;
+            errors = data.errors || data.data || {};
+
+            return {status, message, errors};
         }
-    } catch {
-        return {
-            status: error?.response?.status ?? 500,
-            message:
-                error?.response?.data?.message || error?.message || fallbackMessage,
-            errors: error?.response?.data?.data || {},
-        };
+
+        // 💬 Custom thrown (e.g. from fetch wrapper)
+        if (error?.__custom) {
+            status = error.status ?? 500;
+            message = error.message ?? fallbackMessage;
+            errors = error.errors ?? {};
+            return {status, message, errors};
+        }
+
+        // 🌐 Plain or fetch error
+        if (error?.status) {
+            status = error.status;
+            message = error.message || fallbackMessage;
+            errors = error.errors || {};
+            return {status, message, errors};
+        }
+
+        // 🪶 Generic fallback
+        message = error?.message || fallbackMessage;
+    } catch (e) {
+        console.error("Error parsing API error:", e);
     }
 
-    return {
-        status: error?.response?.status ?? 500,
-        message: error?.message || fallbackMessage,
-        errors: error?.response?.data?.data || {},
-    };
+    return {status, message, errors};
 }
 
 export function capitalizeFirstLetter(string: string | null) {
