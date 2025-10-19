@@ -2,7 +2,7 @@ import React from 'react'
 
 interface Prop {
     title?: string
-    value?: string
+    value?: string | null
 }
 
 const PartnerDetailsComponent = ({title, value}: Prop) => {

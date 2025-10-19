@@ -117,10 +117,29 @@ export default function Page () {
                         <p className="font-[500] ">Status</p>
                         <p className="text-[0.875rem] text-gray-400"><StatusBadge status={mockdata.status} /></p>
                     </div>
-                    <PartnerDetailsComponent title={"Device Type"} value={mockdata.deviceType} />
-                    <PartnerDetailsComponent title={"Browser"} value={mockdata.browser} />
+                    <PartnerDetailsComponent title={"Registration Date"} value={mockdata.createdAt} />
+                    <PartnerDetailsComponent title={"Location"} value={mockdata.location} />
                 </div>
-
+                <div className="mt-4">
+                    <p className="font-[500] ">Interested Categories</p>
+                    <div className="w-full flex flex-wrap space-x-2 space-y-2">
+                        {mockdata.InterestCategories.map((category) => (
+                            <div className="bg-[#E6F0FA] border-[#0069E1] text-[#0069E1] items-center w-fit py-[0.125rem] px-[0.625rem] capitalize text-xs border rounded-full justify-center flex">{category.name}</div>
+                        ))}
+                    </div>
+                    <div className="mt-1">
+                        <span className="font-[500] mr-2">Device Type:</span>
+                        <span>{mockdata.deviceType}</span>
+                    </div>
+                    <div className="mt-1">
+                        <span className="font-[500] mr-2">Browser:</span>
+                        <span>{mockdata.browser}</span>
+                    </div>
+                    <div className="mt-1">
+                        <span className="font-[500] mr-2">IP Address:</span>
+                        <span>{mockdata.ipAddress ?? ""}</span>
+                    </div>
+                </div>
             </div>
             <div className="w-[30%] max-w-[400px] px-4 border-l">
                 <p className="text-lg font-semibold">Contact Partner</p>
