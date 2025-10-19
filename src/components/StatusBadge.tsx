@@ -8,7 +8,7 @@ interface Prop {
 const StatusBadge:FC<Prop> = ({status}) => {
     return (
         <div
-            className={`items-center w-fit py-[0.125rem] px-[0.625rem] text-xs border rounded-full justify-center flex ${statusColourMap[formatStatus(status)]} `}
+            className={`items-center w-fit py-[0.125rem] px-[0.625rem] capitalize text-xs border rounded-full justify-center flex ${statusColourMap[formatStatus(status)]} `}
         >
             {status}
         </div>

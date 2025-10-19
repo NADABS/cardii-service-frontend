@@ -88,7 +88,7 @@ export default function PartnersPage () {
         if(error) {
             handleError(error);
         }
-    }, []);
+    }, [error]);
 
     if (isLoading) {
         return (
