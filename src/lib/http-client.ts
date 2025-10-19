@@ -1,9 +1,10 @@
+import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 
 // Common headers configuration
 const getBaseHeaders = () => ({
     Accept: "application/json",
     "ngrok-skip-browser-wrowser-warning": "zj",
-    requestValidator: process.env.NEXT_PUBLIC_REQUEST_VALIDATOR || "",
+    "X-RequestValidator": process.env.NEXT_PUBLIC_REQUEST_VALIDATOR || "",
 });
 
 // ==================== WITH AUTH (Bearer Token) ====================
@@ -20,7 +21,7 @@ export async function httpGET(
     _headers: Record<string, string> = {},
     token: string | null = null
 ): Promise<Response> {
-    return await httpClient(url, { method: "GET" }, _headers, token);
+    return await httpClient(url, {method: "GET"}, _headers, token);
 }
 
 
@@ -38,7 +39,7 @@ export async function httpPOST(
     _headers: Record<string, string> = {},
     token: string | null = null
 ): Promise<Response> {
-    return await httpClient(url, { body: data, method: "POST" }, _headers, token);
+    return await httpClient(url, {data, method: "POST"}, _headers, token);
 }
 
 /**
@@ -55,7 +56,7 @@ export async function httpPUT(
     _headers: Record<string, string> = {},
     token: string | null = null
 ): Promise<Response> {
-    return await httpClient(url, { body: data, method: "PUT" }, _headers, token);
+    return await httpClient(url, {body: data, method: "PUT"}, _headers, token);
 }
 
 /**
@@ -72,7 +73,7 @@ export async function httpPATCH(
     _headers: Record<string, string> = {},
     token: string | null = null
 ): Promise<Response> {
-    return await httpClient(url, { body: data, method: "PATCH" }, _headers, token);
+    return await httpClient(url, {body: data, method: "PATCH"}, _headers, token);
 }
 
 /**
@@ -89,9 +90,8 @@ export async function httpDELETE(
     _headers: Record<string, string> = {},
     token: string | null = null
 ): Promise<Response> {
-    return await httpClient(url, { body: data, method: "DELETE" }, _headers, token);
+    return await httpClient(url, {body: data, method: "DELETE"}, _headers, token);
 }
-
 
 
 /**
@@ -102,21 +102,26 @@ export async function httpDELETE(
  * @param token
  * @returns {Promise<Response>} - A Promise that resolves to a Response object representing the response to the request.
  */
+
 export default async function httpClient(
     url: string | URL,
-    options: RequestInit = {},
+    options: AxiosRequestConfig = {},
     _headers: Record<string, string> = {},
     token: string | null = null
-): Promise<Response> {
+): Promise<Promise<AxiosResponse<any, any, {}>> | any> {
     const headers = {
         ...getBaseHeaders(),
         ..._headers,
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(token ? {Authorization: `Bearer ${token}`} : {}),
     };
 
-    const _options = { ...options, headers };
+    const config: AxiosRequestConfig = {
+        url: url.toString(),
+        headers,
+        ...options,
+    };
 
-    return await fetch(url, _options);
+    return axios(config);
 }
 
 /**
@@ -133,6 +138,6 @@ export async function httpExternalServiceClient(
         ..._headers,
     };
 
-    const _options = { ...options, headers };
+    const _options = {...options, headers};
     return await fetch(url, _options);
 }

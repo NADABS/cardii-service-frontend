@@ -1,25 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
-import {httpGET} from "@/src/lib/http-client";
+import { httpGET } from "@/src/lib/http-client";
+import {handleError} from "@/src/lib/errorHandler";
 
 export default function useFetch(
     url: string,
     queryKey: any[],
-    headers = {},
+    headers: Record<string, string> = {},
     token: string | null = null,
     isEnabled = true
 ) {
     const { data, isLoading, error, refetch, isFetching } = useQuery({
+        queryKey,
         enabled: isEnabled,
         queryFn: async () => {
-            const response = await httpGET(url, headers, token);
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "An error occurred");
+            try {
+                const response = await httpGET(url, headers, token);
+                return response.data;
+            } catch (error: any) {
+                handleError(error);
+                throw error;
             }
-            return await response.json();
         },
-        queryKey: queryKey,
     });
 
-    return { data, isLoading, error, refetch, isFetching};
+    return { data, isLoading, error, refetch, isFetching };
 }

@@ -1,15 +1,15 @@
 "use client"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { InputGroup } from "@/components/ui/input-group";
-import { Label } from "@/components/ui/label"
+import React, {FormEvent, useState} from "react"
+import {Button} from "@/components/ui/button"
+import {Input} from "@/components/ui/input"
+import {InputGroup} from "@/components/ui/input-group";
+import {Label} from "@/components/ui/label"
 import {useRouter} from "next/navigation";
 import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
 import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog";
 import {OTPVerification} from "@/src/components/registration/OTPVerification";
 import {Check, ChevronDown} from "lucide-react";
-import { MultiSelect, MultiSelectChangeEvent } from 'primereact/multiselect';
+import {MultiSelect, MultiSelectChangeEvent} from 'primereact/multiselect';
 import {Drawer, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer";
 import {useMutation} from "@tanstack/react-query";
 import {toJsonString} from "@/src/lib/storage";
@@ -41,11 +41,6 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-    const [errorMessage, setErrorMessage] = useState("");
-    const [validationErrors, setValidationErrors] = useState({
-        phoneNumber: []
-    })
-
     const router = useRouter();
 
     const apiBaseUrl = process.env.NEXT_PUBLIC_CARDII_API_BASE_URL;
@@ -54,65 +49,53 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
         mutationFn: async (postRequest: any) => {
             const response = await httpPOST(
                 `${apiBaseUrl}/v1/otp/send`,
-                toJsonString(postRequest),
-                { "Content-Type": "application/json" }
+                postRequest,
+                {"Content-Type": "application/json"}
             );
 
-            return response.json();
+            const {data, status} = response;
+
+            if (!data.success) throw new Error(data.message || 'Request failed');
+
+            return data;
         },
-        onSuccess: () => {
-            setIsDialogOpen(true);
-        },
-        onError: (error) => {
-            handleError(error)
-        },
+        onSuccess: (_data) => setIsDialogOpen(true),
+        onError: (error) => handleError(error)
     });
-
-
 
     const registerPartnerMutation = useMutation({
         mutationFn: async (postRequest: any) => {
             const response = await httpPOST(
                 `${apiBaseUrl}/v1/partners`,
-                toJsonString(postRequest),
+                postRequest,
                 {
                     "Content-Type": "application/json",
                 }
             );
 
-            if (response.ok) {
-                setActiveComponent('success');
-                return response
-            } else {
-                const errorData = await response.json().catch(() => null);
-                if (response.status === 422) {
-                    const _validationErrors = errorData.errors;
-                    setValidationErrors(_validationErrors);
-                    throw new Error();
-                } else {
-                    setErrorMessage(errorData.errors);
-                    throw new Error(
-                        errorData?.message ||
-                        `Error ${response.status}: ${response.statusText}`
-                    );
-                }
-            }
+            const {data, status} = response;
 
-            return await response.json();
-        }
+            if (!data.success) throw new Error(data.message || 'Request failed');
+
+            return data;
+        },
+        onSuccess: () => setActiveComponent("success"),
+        onError: (error) => handleError(error)
     })
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-        const form = e.currentTarget;
+        const form = event.currentTarget;
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
         }
-        registerPartnerMutation.mutate({formData});
+        registerPartnerMutation.mutate({
+            ...formData,
+            interestCategoryIds: formData.interestCategoryIds.map((category) => category.externalId)
+        });
     };
-
 
     const handleMobileOptionToggle = (option: OptionType) => {
         const isSelected = formData.interestCategoryIds.some((item) => item.externalId === option.externalId)
@@ -129,6 +112,10 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
         }
     }
 
+    const handleOnVerifyClick = () => {
+        sendOTPMutation.mutate({phoneNumber: formData.phoneNumber})
+    }
+
     return (
         <div className="w-full  flex flex-col items-center  rounded-lg pt-4 md:p-4">
 
@@ -142,7 +129,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                         type="text"
                         placeholder="Enter your full name"
                         value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
                         required
                         className={`h-10 text-base bg-white border-border`}
                     />
@@ -157,7 +144,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                         type="email"
                         placeholder="Enter email address"
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
                         required
                         className={`h-10 text-base bg-white border-border`}
                     />
@@ -176,7 +163,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                                 value={formData.phoneNumber}
                                 onChange={(e) => {
                                     if (!isVerified) {
-                                        setFormData({ ...formData, phoneNumber: e.target.value });
+                                        setFormData({...formData, phoneNumber: e.target.value});
                                     }
                                 }}
                                 required
@@ -188,14 +175,14 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                             <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                                 {isVerified ? (
                                     <div className="flex items-center justify-center text-green-500">
-                                        <Check className="w-5 h-5" />
+                                        <Check className="w-5 h-5"/>
                                     </div>
                                 ) : (
                                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                                         <button
                                             type="button"
-                                            disabled={formData.phoneNumber.length < 9 || sendOTPMutation.isPending}
-                                            onClick={() => sendOTPMutation.mutate({ phoneNumber: formData.phoneNumber })}
+                                            disabled={formData.phoneNumber.length < 10 || sendOTPMutation.isPending}
+                                            onClick={() => handleOnVerifyClick()}
                                             className="h-8 flex items-center justify-center px-3 rounded-md text-xs font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
                                         >
                                             {sendOTPMutation.isPending ? "Sending..." : "Verify"}
@@ -205,7 +192,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                                             className="sm:w-[90%] p-1"
                                             onInteractOutside={(e) => e.preventDefault()}
                                         >
-                                            <DialogTitle />
+                                            <DialogTitle/>
                                             <OTPVerification
                                                 phoneNumber={formData.phoneNumber}
                                                 onVerifySuccess={() => {
@@ -231,7 +218,10 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                         <MultiSelect
                             id="description"
                             value={formData.interestCategoryIds}
-                            onChange={(e: MultiSelectChangeEvent) => setFormData({ ...formData, interestCategoryIds: e.value })}
+                            onChange={(event: MultiSelectChangeEvent) => setFormData({
+                                ...formData,
+                                interestCategoryIds: event.value
+                            })}
                             options={interestCategories}
                             display="chip"
                             optionLabel="name"
@@ -241,11 +231,11 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                             required
                             selectAllLabel="Select All"
                             pt={{
-                                root: { className: "focus:outline-none focus:ring-0 flex items-center focus:border-none capitalize shadow-none" },
-                                label: { className: "text-blue-500 text-sm capitalize" },
-                                token: { className: "rounded-full bg-blue-200 capitalize" },
-                                item: { className: "capitalize" },
-                                list: { className: "capitalize" },
+                                root: {className: "focus:outline-none focus:ring-0 flex items-center focus:border-none capitalize shadow-none"},
+                                label: {className: "text-blue-500 text-sm capitalize"},
+                                token: {className: "rounded-full bg-blue-200 capitalize"},
+                                item: {className: "capitalize"},
+                                list: {className: "capitalize"},
                             }}
                         />
                     </div>
@@ -256,12 +246,13 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                             onClick={() => setIsDrawerOpen(true)}
                             className="w-full h-10 px-3 text-base bg-white border border-border rounded-md flex items-center justify-between hover:bg-gray-50 transition-colors"
                         >
-                            <span className={formData.interestCategoryIds.length === 0 ? "text-muted-foreground" : "text-foreground"}>
+                            <span
+                                className={formData.interestCategoryIds.length === 0 ? "text-muted-foreground" : "text-foreground"}>
                                 {formData.interestCategoryIds.length === 0
                                     ? "Select one or more options"
-                                : `${formData.interestCategoryIds.length} selected`}
+                                    : `${formData.interestCategoryIds.length} selected`}
                             </span>
-                            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                            <ChevronDown className="w-4 h-4 text-muted-foreground"/>
                         </button>
 
                         {formData.interestCategoryIds.length > 0 && (
@@ -299,7 +290,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                                         >
                                             <div className="flex items-center justify-between">
                                                 <span className="text-base">{capitalizeFirstLetter(option.name)}</span>
-                                                {isSelected && <Check className="w-5 h-5 text-blue-500" />}
+                                                {isSelected && <Check className="w-5 h-5 text-blue-500"/>}
                                             </div>
                                         </button>
                                     )
@@ -309,10 +300,12 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                     </Drawer>
                 </div>
                 <div className="pt-6 space-y-4">
-                    <Button type="submit" disabled={!isVerified || formData.interestCategoryIds.length==0} className="w-full h-10 text-base bg-[#1a1d2e] hover:bg-[#2a2d3e] text-white">
+                    <Button type="submit" disabled={!isVerified || formData.interestCategoryIds.length == 0}
+                            className="w-full h-10 text-base bg-[#1a1d2e] hover:bg-[#2a2d3e] text-white">
                         Join Waitlist
                     </Button>
-                    <button onClick={()=>router.replace('/')} type="button" className="w-full cursor-pointer border rounded-md py-2 text-base text-foreground/80 hover:text-foreground transition-colors">
+                    <button onClick={() => router.replace('/')} type="button"
+                            className="w-full cursor-pointer border rounded-md py-2 text-base text-foreground/80 hover:text-foreground transition-colors">
                         Back to Website
                     </button>
                 </div>
