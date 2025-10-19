@@ -6,7 +6,7 @@ import {handleError} from "@/src/lib/errorHandler";
 import {CustomSpinner} from "@/src/components/CustomSpinner";
 import {Button} from "@/components/ui/button";
 import PartnerDetailsComponent from "@/src/components/partners/PartnerDetailsComponent";
-import {ChevronLast, ChevronLeft} from "lucide-react";
+import {ChevronLeft} from "lucide-react";
 import StatusBadge from "@/src/components/StatusBadge";
 
 
