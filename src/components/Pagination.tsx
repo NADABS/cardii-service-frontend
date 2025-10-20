@@ -36,8 +36,7 @@ const Pagination: React.FC<Prop> = ({ meta, loadPage }) => {
     };
 
     return (
-        <div className="w-full flex justify-between items-center">
-            <div className="font-[500] text-[#707070]">Showing {getFirstIndex()}-{getLastIndex()}</div>
+        <div className="w-full flex justify-center items-center">
             <div className="w-fit text-[#050505] p-2 flex items-center justify-center bg-white rounded-lg">
                 <div className="mr-3 flex justify-center items-center">
                     {currentPage > 1 && (
@@ -67,7 +66,6 @@ const Pagination: React.FC<Prop> = ({ meta, loadPage }) => {
                     )}
                 </div>
             </div>
-            <div className="font-[500] text-[#707070]">{total} Records</div>
         </div>
     );
 };

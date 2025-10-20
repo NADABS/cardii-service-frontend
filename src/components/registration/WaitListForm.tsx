@@ -53,11 +53,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                 {"Content-Type": "application/json"}
             );
 
-            const {data, status} = response;
-
-            if (!data.success) throw new Error(data.message || 'Request failed');
-
-            return data;
+            return response.data
         },
         onSuccess: (_data) => setIsDialogOpen(true),
         onError: (error) => handleError(error)
@@ -73,11 +69,7 @@ export function WaitlistForm({setActiveComponent, interestCategories}: Props) {
                 }
             );
 
-            const {data, status} = response;
-
-            if (!data.success) throw new Error(data.message || 'Request failed');
-
-            return data;
+            return response.data;
         },
         onSuccess: () => setActiveComponent("success"),
         onError: (error) => handleError(error)
