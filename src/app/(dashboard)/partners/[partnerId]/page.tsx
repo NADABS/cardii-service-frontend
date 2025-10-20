@@ -70,7 +70,7 @@ export default function Page () {
 
     const router = useRouter();
 
-    const {data, isLoading, error} = useFetch(`${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners/${partnerId}`, ["partners"]);
+    const {data, isLoading, error} = useFetch(`${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners/${partnerId}`, [partnerId]);
 
     const [partnerStatus, setPartnerStatus] = useState(data?.data?.status ?? mockdata.status)
 
