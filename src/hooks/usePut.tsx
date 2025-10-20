@@ -9,12 +9,13 @@ export default function usePut(url: string) {
                 "Content-Type": "application/json",
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "An error occurred");
+            if (response.status < 200 || response.status >= 300) {
+                const errorMessage =
+                    response.data?.message || "An error occurred";
+                throw new Error(errorMessage);
             }
 
-            return await response.json();
+            return response.data;
         },
     });
 

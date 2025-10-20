@@ -1,20 +1,25 @@
 import { useMutation } from "@tanstack/react-query";
-import {toJsonString} from "@/src/lib/storage";
-import {httpPOST} from "@/src/lib/http-client";
+import { toJsonString } from "@/src/lib/storage";
+import { httpPOST } from "@/src/lib/http-client";
 
 export default function usePost(url: string) {
     const mutation = useMutation({
         mutationFn: async (postRequest: any) => {
-            const response = await httpPOST(url, toJsonString(postRequest), {
-                "Content-Type": "application/json",
-            });
+            const response = await httpPOST(
+                url,
+                toJsonString(postRequest),
+                {
+                    "Content-Type": "application/json",
+                }
+            );
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "An error occurred");
+            if (response.status < 200 || response.status >= 300) {
+                const errorMessage =
+                    response.data?.message || "An error occurred";
+                throw new Error(errorMessage);
             }
 
-            return await response.json();
+            return response.data;
         },
     });
 
