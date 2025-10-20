@@ -3,7 +3,7 @@ export default interface Partner {
     internalId: string;
     name: string;
     email: string;
-    phone: string;
+    phoneNumber: string;
     status: string;
     preferredChannel: string;
     deviceType: string;

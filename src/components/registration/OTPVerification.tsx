@@ -100,11 +100,7 @@ export function OTPVerification({phoneNumber, onVerifySuccess, onBack,}: OTPVeri
                 }
             );
 
-            const {data, status} = response;
-
-            if (!data.success) throw new Error(data.message || 'Request failed');
-
-            return data;
+            return response.data;
         },
         onSuccess: () => {
             onVerifySuccess()
@@ -122,11 +118,7 @@ export function OTPVerification({phoneNumber, onVerifySuccess, onBack,}: OTPVeri
                 {"Content-Type": "application/json"}
             );
 
-            const {data, status} = response;
-
-            if (!data.success) throw new Error(data.message || 'Request failed');
-
-            return data;
+            return response.data
         },
         onError: (error) => {
             handleError(error)

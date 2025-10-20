@@ -4,6 +4,11 @@ import {extractErrorsLabeled, parseApiError} from "@/src/lib/utils";
 export function handleError(error: any, fallbackMessage = "An unknown error occurred") {
     const {status, message, errors} = parseApiError(error, fallbackMessage);
 
+    const cancelAction = {
+        label: "Close",
+        onClick: () => {} // Empty function or custom logic
+    };
+
     // 🧾 Laravel Validation (422)
     if (status === 422 && Object.keys(errors).length > 0) {
         const messages = extractErrorsLabeled(errors);
@@ -17,9 +22,9 @@ export function handleError(error: any, fallbackMessage = "An unknown error occu
                     )}
                 </div>
             ),
-            duration: "5000",
+            duration: 5000,
             style: {borderColor: "#FF3B301A", color: "#FF3B30"},
-            cancel: {label: "Close"},
+            cancel: cancelAction,
         });
         return;
     }
@@ -33,7 +38,7 @@ export function handleError(error: any, fallbackMessage = "An unknown error occu
                 </p>
             ),
             style: {borderColor: "#FF3B301A", color: "#FF3B30"},
-            cancel: {label: "Close"},
+            cancel: cancelAction,
         });
         return;
     }
@@ -43,7 +48,7 @@ export function handleError(error: any, fallbackMessage = "An unknown error occu
         toast("Not Found", {
             description: <span className="text-red-600">{message || "Resource not found."}</span>,
             style: {borderColor: "#FF3B301A", color: "#FF3B30"},
-            cancel: {label: "Close"},
+            cancel: cancelAction,
         });
         return;
     }
@@ -57,7 +62,7 @@ export function handleError(error: any, fallbackMessage = "An unknown error occu
                 </p>
             ),
             style: {borderColor: "#FF3B301A", color: "#FF3B30"},
-            cancel: {label: "Close"},
+            cancel: cancelAction,
         });
         return;
     }
@@ -65,6 +70,6 @@ export function handleError(error: any, fallbackMessage = "An unknown error occu
     toast("Error", {
         description: <p className="text-red-600">{message}</p>,
         style: {borderColor: "#FF3B301A", color: "#FF3B30"},
-        cancel: {label: "Close"},
+        cancel: cancelAction,
     });
 }

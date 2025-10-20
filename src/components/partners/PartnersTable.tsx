@@ -37,7 +37,7 @@ const PartnersTable = ({ showHeader = true, partners, meta }: Props) => {
 
         {
             header: "Phone Number",
-            accessor: "phone" as const,
+            accessor: "phoneNumber" as const,
         },
         {
             header: "Status",
@@ -55,23 +55,11 @@ const PartnersTable = ({ showHeader = true, partners, meta }: Props) => {
     ];
 
     const rowActions = (partner: Partner) => (
-        <Dialog>
-            <DialogTrigger asChild>
                 <button
+                    onClick={()=> router.push(`/partners/${partner.externalId}`)}
                     className="text-gray-400 font-bold">
                     <BsThreeDots className="h-4 w-4" />
                 </button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogTitle>Name: {partner.name}</DialogTitle>
-                <p>Id: {partner.internalId}</p>
-                <p>Email: {partner.email}</p>
-                <p>Status: {partner.status}</p>
-                <p>Date Registered: {partner.createdAt}</p>
-                <p>Preferred Channel: {partner.preferredChannel}</p>
-                <p>Location: {partner.location}</p>
-            </DialogContent>
-        </Dialog>
 
     );
 

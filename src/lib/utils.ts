@@ -41,11 +41,13 @@ export const formatStatus = (_status?: string) => {
 export const statusColourMap: Record<string, string> = {
     done: "bg-[#92C9B8]",
     onhold: "bg-[#6A9AD3] text-white",
+    suspended: "border-[#FF3B30] bg-[#FFECEC] text-[#FF3B30] ",
     inprogress: "bg-[#DD944B] text-white",
     success: "bg-[#EBFFF2] text-[#4AA673]  border-[#4AA673] ",
     completed: "bg-[#EBFFF2] text-[#4AA673]  border-[#4AA673] ",
     verified: "bg-[#E9F9EF] text-[#34C759] border-[#34C759]",
     unverified: "bg-[#FFF6E5] text-[#FF9500] border-[#FF9500]",
+    pending: "bg-[#FFF6E5] text-[#FF9500] border-[#FF9500]",
     "": "bg-gray-400 text-gray-600",
 }
 

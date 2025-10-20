@@ -7,8 +7,6 @@ const getBaseHeaders = () => ({
     "X-RequestValidator": process.env.NEXT_PUBLIC_REQUEST_VALIDATOR || "",
 });
 
-// ==================== WITH AUTH (Bearer Token) ====================
-
 /**
  * Sends an HTTP GET request to the specified URL with authentication.
  * @param {string | URL} url - The URL to send the HTTP GET request to.
@@ -20,10 +18,9 @@ export async function httpGET(
     url: string | URL,
     _headers: Record<string, string> = {},
     token: string | null = null
-): Promise<Response> {
-    return await httpClient(url, {method: "GET"}, _headers, token);
+): Promise<AxiosResponse> {
+    return await httpClient(url, { method: "GET" }, _headers, token);
 }
-
 
 /**
  * Makes a POST request to the specified URL with the provided data with authentication.
@@ -38,8 +35,8 @@ export async function httpPOST(
     data: any,
     _headers: Record<string, string> = {},
     token: string | null = null
-): Promise<Response> {
-    return await httpClient(url, {data, method: "POST"}, _headers, token);
+): Promise<AxiosResponse> {
+    return await httpClient(url, { data, method: "POST" }, _headers, token);
 }
 
 /**
@@ -55,8 +52,8 @@ export async function httpPUT(
     data: any,
     _headers: Record<string, string> = {},
     token: string | null = null
-): Promise<Response> {
-    return await httpClient(url, {body: data, method: "PUT"}, _headers, token);
+): Promise<AxiosResponse> {
+    return await httpClient(url, {data, method: "PUT"}, _headers, token);
 }
 
 /**
@@ -72,8 +69,8 @@ export async function httpPATCH(
     data: any,
     _headers: Record<string, string> = {},
     token: string | null = null
-): Promise<Response> {
-    return await httpClient(url, {body: data, method: "PATCH"}, _headers, token);
+): Promise<AxiosResponse> {
+    return await httpClient(url, {data, method: "PATCH"}, _headers, token);
 }
 
 /**
@@ -89,8 +86,8 @@ export async function httpDELETE(
     data?: any | null,
     _headers: Record<string, string> = {},
     token: string | null = null
-): Promise<Response> {
-    return await httpClient(url, {body: data, method: "DELETE"}, _headers, token);
+): Promise<AxiosResponse> {
+    return await httpClient(url, {data, method: "DELETE"}, _headers, token);
 }
 
 
