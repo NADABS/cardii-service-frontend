@@ -12,7 +12,6 @@ import {Check, ChevronDown} from "lucide-react";
 import {MultiSelect, MultiSelectChangeEvent} from 'primereact/multiselect';
 import {Drawer, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer";
 import {useMutation} from "@tanstack/react-query";
-import {toJsonString} from "@/src/lib/storage";
 import {handleError} from "@/src/lib/errorHandler";
 import {httpPOST} from "@/src/lib/http-client";
 import {capitalizeFirstLetter} from "@/src/lib/utils";
