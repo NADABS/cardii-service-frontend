@@ -17,6 +17,7 @@ const CreateCampaignForm = ({ interestCategories, handleClose }: Props) => {
 
     function resetForm() {
         setNewCampaignData(defaultFormData)
+        handleClose()
     }
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
