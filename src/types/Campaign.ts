@@ -1,0 +1,13 @@
+import InterestCategory from "@/src/types/InterestCategory";
+
+export default interface Campaign {
+    externalId: string;
+    title: string;
+    message: string;
+    interestCategories: InterestCategory[];
+    createdAt: string;
+    updatedAt: string;
+    status: string;
+    totalRecipients: number | string;
+    deliveredMessages: number | string;
+}
