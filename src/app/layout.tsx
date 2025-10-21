@@ -5,8 +5,8 @@ import TanstackQueryProvider from "@/src/lib/providers/TanstackQueryProvider";
 import {Toaster} from "@/components/ui/sonner";
 
 const dmSans = DM_Sans({
-    subsets: ["latin"],
     variable: "--font-dm-sans",
+    subsets: ["latin"],
     weight: ["400", "500", "700"],
 });
 

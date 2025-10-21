@@ -1,102 +1,127 @@
-import React, {FormEvent, useState} from 'react'
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {MultiSelect, MultiSelectChangeEvent} from "primereact/multiselect";
-import {Button} from "@/components/ui/button";
-import {handleSuccess} from "@/src/lib/successHandler";
-import InterestCategory from "@/src/types/InterestCategory";
+import React, { FormEvent, useState } from "react"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect"
+import { Button } from "@/components/ui/button"
+import { handleSuccess } from "@/src/lib/successHandler"
+import InterestCategory from "@/src/types/InterestCategory"
 
 interface Props {
     interestCategories: InterestCategory[]
+    handleClose: () => void
 }
 
-const CreateCampaignForm = ({interestCategories}: Props) => {
-
-    const defaultFormData = { title: "", message: "", interestCategoryIds: [] as InterestCategory[]}
-
+const CreateCampaignForm = ({ interestCategories, handleClose }: Props) => {
+    const defaultFormData = { title: "", message: "", interestCategoryIds: [] as string[] }
     const [newCampaignData, setNewCampaignData] = useState(defaultFormData)
-    function resetForm () {
-        setNewCampaignData(defaultFormData);
+
+    function resetForm() {
+        setNewCampaignData(defaultFormData)
     }
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        const form = event.currentTarget;
+        event.preventDefault()
+        const form = event.currentTarget
         if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
+            form.reportValidity()
+            return
         }
-        resetForm();
-        handleSuccess("Campaign created");
-    };
+        resetForm()
+        handleClose()
+        handleSuccess("Campaign created")
+    }
 
     return (
-        <form onSubmit={handleSubmit} className="py-4 space-y-3">
+        <form onSubmit={handleSubmit} className="py-4 space-y-3 font-normal">
             <div className="space-y-2">
                 <Label htmlFor="title" className="text-base font-normal">
                     <span className="text-red-500">*</span>Title
                 </Label>
                 <Input
-                    id="name"
+                    id="title"
                     type="text"
                     placeholder="Enter title"
                     value={newCampaignData.title}
-                    onChange={(e) => setNewCampaignData({...newCampaignData, title: e.target.value})}
+                    onChange={(e) =>
+                        setNewCampaignData({ ...newCampaignData, title: e.target.value })
+                    }
                     required
-                    className={`h-10 text-base bg-white border-border`}
+                    className="h-10 text-base font-normal bg-white border-border placeholder:font-normal placeholder:text-muted-foreground"
                 />
             </div>
+
             <div className="space-y-2">
                 <Label htmlFor="message" className="text-base font-normal">
                     <span className="text-red-500">*</span>Message
                 </Label>
-                <textarea required
-                          className="border focus:outline-none p-3 h-36 w-full rounded-lg"
-                          value={newCampaignData.message}
-                          onChange={(e) => setNewCampaignData({...newCampaignData, message: e.target.value})}
-                          placeholder="Enter message"
+                <textarea
+                    required
+                    id="message"
+                    className="border focus:outline-none p-3 h-36 w-full rounded-lg font-normal text-base placeholder:font-normal placeholder:text-muted-foreground"
+                    value={newCampaignData.message}
+                    onChange={(e) =>
+                        setNewCampaignData({ ...newCampaignData, message: e.target.value })
+                    }
+                    placeholder="Enter message"
                 />
             </div>
+
             <div className="space-y-2">
-                <Label htmlFor="message" className="text-base font-normal">
+                <Label htmlFor="recipientGroups" className="text-base font-normal">
                     <span className="text-red-500">*</span>Recipient Groups
                 </Label>
                 <MultiSelect
-                    id="description"
+                    id="recipientGroups"
                     value={newCampaignData.interestCategoryIds}
-                    onChange={(event: MultiSelectChangeEvent) => setNewCampaignData({
-                        ...newCampaignData,
-                        interestCategoryIds: event.value
-                    })}
+                    onChange={(event: MultiSelectChangeEvent) =>
+                        setNewCampaignData({
+                            ...newCampaignData,
+                            interestCategoryIds: event.value,
+                        })
+                    }
                     options={interestCategories}
                     display="chip"
                     optionLabel="name"
                     placeholder="Select one or more options"
-                    className="w-full h-10 rounded-md text-base capitalize focus:outline-none focus:ring-0 focus:border-none"
+                    className="w-full h-10 rounded-md text-base font-normal capitalize focus:outline-none focus:ring-0 focus:border-none"
                     maxSelectedLabels={3}
                     required
                     selectAllLabel="Select All"
                     pt={{
-                        root: {className: "focus:outline-none focus:ring-0 flex items-center focus:border-none capitalize shadow-none"},
-                        label: {className: "text-blue-500 text-sm capitalize"},
-                        token: {className: "rounded-full bg-blue-200 capitalize"},
-                        item: {className: "capitalize"},
-                        list: {className: "capitalize"},
+                        root: {
+                            className:
+                                "focus:outline-none focus:ring-0 flex items-center focus:border-none capitalize shadow-none font-normal",
+                        },
+                        label: { className: "text-blue-500 text-sm capitalize font-normal" },
+                        token: { className: "rounded-full bg-blue-200 capitalize font-normal" },
+                        item: { className: "capitalize font-normal" },
+                        list: { className: "capitalize font-normal" },
                     }}
                 />
             </div>
-            <div className="py-4 w-full flex justify-between items-center">
-                <Button onClick={resetForm} type="reset">
+
+            <div className="pt-4 w-full flex items-center justify-end gap-4">
+                <Button
+                    type="reset"
+                    onClick={resetForm}
+                    variant="outline"
+                >
                     Cancel
                 </Button>
                 <Button
-                    disabled={newCampaignData.title=="" || newCampaignData.message == "" || newCampaignData.interestCategoryIds.length ==0}
-                    type="submit">
+                    type="submit"
+                    disabled={
+                        newCampaignData.title === "" ||
+                        newCampaignData.message === "" ||
+                        newCampaignData.interestCategoryIds.length === 0
+                    }
+                >
                     Send
                 </Button>
             </div>
+
         </form>
     )
 }
+
 export default CreateCampaignForm

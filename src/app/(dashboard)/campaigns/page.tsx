@@ -1,7 +1,6 @@
 'use client';
 import React, {useEffect} from "react";
 import useFetch from "@/src/hooks/useFetch";
-import CreateCampaignForm from "@/src/components/campaigns/CreateCampaignForm";
 import {handleError} from "@/src/lib/errorHandler";
 import {CustomSpinner} from "@/src/components/CustomSpinner";
 import CampaignsTable from "@/src/components/campaigns/CampaignsTable";
@@ -166,6 +165,7 @@ export default function CampaignsPage()  {
         if(error) handleError(error);
     }, [error]);
 
+
     if (isLoadingInterestCategories) {
         return (
             <div className="w-full h-full flex justify-center items-center">
@@ -175,14 +175,8 @@ export default function CampaignsPage()  {
     }
 
     return (
-        <div className="w-full h-full flex overflow-hidden space-x-2">
-            <div className="flex flex-col flex-1">
-                <CampaignsTable campaigns={mockData} meta={[]} />
-            </div>
-            <div className="w-[30%] max-w-[400px] px-4 border-l">
-                <p className="text-lg font-semibold">Create New Campaign</p>
-                <CreateCampaignForm interestCategories={interestCategories?.data ?? []} />
-            </div>
+        <div className="w-full h-full overflow-hidden">
+            <CampaignsTable campaigns={mockData} meta={[]} interestCategories={interestCategories?.data ?? []} />
         </div>
     )
 }
