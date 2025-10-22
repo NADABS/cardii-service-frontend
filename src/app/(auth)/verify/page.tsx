@@ -53,7 +53,7 @@ export default function Page() {
         },
         onSuccess: (data) => {
             setItem("userDetails", data.data);
-            router.push("/overview");
+            router.replace("/overview");
         },
         onError: (error) => {handleError(error)}
     })
