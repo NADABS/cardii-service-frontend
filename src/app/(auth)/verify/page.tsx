@@ -19,12 +19,13 @@ export default function Page() {
     const [showPassword, setShowPassword] = useState(false)
     const [password, setPassword] = useState("")
     const [missingRequirements, setMissingRequirements] = useState<string[]>([]);
+    const [displayLoader, setDisplayLoader] = useState<boolean>(false);
 
     const apiBaseUrl = process.env.NEXT_PUBLIC_CARDII_API_BASE_URL;
 
     const verifyEmail = useMutation({
         mutationFn: async (postRequest: any) => {
-            const response = await httpPOST(`${apiBaseUrl}/v1/verify-email`, postRequest, {
+            const response = await httpPOST(`${apiBaseUrl}/v1/users/verify`, postRequest, {
                 "Content-Type": "application/json",
             })
 
@@ -32,11 +33,12 @@ export default function Page() {
         },
         onSuccess: (data) => {
             setUserDetails({
-                name: data.name,
-                email: data.email,
+                name: data.data.name,
+                email: data.data.email,
             })
         },
         onError: (error) => {
+            setDisplayLoader(false);
             setHasError(true)
             handleError(error)
         },
@@ -44,7 +46,7 @@ export default function Page() {
 
     const createUser = useMutation({
         mutationFn: async (postRequest: any) => {
-            const response = await httpPOST(`${apiBaseUrl}/v1/create-user`, postRequest, {
+            const response = await httpPOST(`${apiBaseUrl}/v1/users`, postRequest, {
                 "Content-Type": "application/json",
             })
             return response.data
@@ -58,12 +60,11 @@ export default function Page() {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // createUser.mutate({
-        //     name: userDetails?.name,
-        //     email: userDetails?.email,
-        //     password: password,
-        // })
-        router.replace("/overview");
+        setDisplayLoader(true);
+        createUser.mutate({
+            token: token,
+            password: password,
+        })
     }
 
     function getMissingPasswordRequirements(_password: string): string[] {
@@ -100,12 +101,11 @@ export default function Page() {
 
     useEffect(() => {
         if (token && token.trim() !== "") {
-            //verifyEmail.mutate({ token })
-            setUserDetails({ name: "John Doe", email: "johndoe@gmail.com" })
+            verifyEmail.mutate({ token })
         }
     }, [token])
 
-    if (verifyEmail.isPending || createUser.isPending) {
+    if (verifyEmail.isPending || displayLoader) {
         return (
             <div className="w-full h-full flex justify-center items-center">
                 <CustomSpinner />
