@@ -40,7 +40,7 @@ export type DataTableProps<T> = {
     onPageChange?: (page: number | string) => void;
     rowActions?: (row: T) => React.ReactNode;
     footer?: React.ReactNode;
-    meta: IMeta;
+    meta: IMeta | [];
     cardHeaderClassName?: string;
     cardHeaderData?: React.ReactNode;
     tableHeaderClassName?: string;
@@ -83,7 +83,7 @@ export function ReusableTable<T extends Record<string, any>>({
 
     return (
         <div className="h-full flex flex-col">
-            <Card className="shadow-none border-none rounded-none flex flex-col flex-grow p-0">
+            <Card className="shadow-none border-none rounded-none gap-0 flex flex-col flex-grow p-0">
                 {cardHeaderData && (
                     <CardHeader className="pb-2 px-0 font-bold ">{cardHeaderData}</CardHeader>
                 )}
@@ -172,9 +172,9 @@ export function ReusableTable<T extends Record<string, any>>({
                 </Table>
             </Card>
 
-            {onPageChange && (
+            {onPageChange && meta && !Array.isArray(meta) && (
                 <div className="flex justify-center mt-auto">
-                    <Pagination meta={meta} loadPage={onPageChange} />
+                    <Pagination meta={meta as IMeta} loadPage={onPageChange} />
                 </div>
             )}
         </div>

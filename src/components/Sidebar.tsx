@@ -1,12 +1,10 @@
 "use client"
 import Link from "next/link"
-import { VscChecklist } from "react-icons/vsc"
-import { PiCirclesThree } from "react-icons/pi"
 import { RiSettings3Line } from "react-icons/ri"
 import {cn, getInitials} from "@/src/lib/utils";
 import {BsThreeDotsVertical} from "react-icons/bs";
 import {usePathname, useRouter} from "next/navigation"
-import { LayoutDashboardIcon, UsersIcon, LogOutIcon, UserIcon } from "lucide-react"
+import {LayoutDashboardIcon, UsersIcon, LogOutIcon, UserIcon, MessageSquareShareIcon} from "lucide-react"
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 
 const primaryLinks = [
@@ -21,19 +19,9 @@ const primaryLinks = [
         icon: <UsersIcon/>,
     },
     {
-        title: "Administration",
-        href: "/administration",
-        icon: <VscChecklist/>,
-    },
-    {
-        title: "Members",
-        href: "/members",
-        icon: <PiCirclesThree/>,
-    },
-    {
-        title: "Settings",
-        href: "/settings",
-        icon: <RiSettings3Line/>,
+        title: "Campaigns",
+        href: "/campaigns",
+        icon: <MessageSquareShareIcon/>,
     },
 ]
 
