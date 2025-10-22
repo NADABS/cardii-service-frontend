@@ -12,6 +12,7 @@ interface Props {
     campaigns: Campaign[];
     meta: IMeta | [];
     interestCategories: InterestCategory[]
+    bearerToken: string
 }
 
 const CampaignsTable = ({campaigns, meta, interestCategories}: Props) => {
