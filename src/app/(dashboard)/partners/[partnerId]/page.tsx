@@ -9,6 +9,7 @@ import PartnerDetailsComponent from "@/src/components/partners/PartnerDetailsCom
 import {ChevronLeft} from "lucide-react";
 import StatusBadge from "@/src/components/StatusBadge";
 import {handleSuccess} from "@/src/lib/successHandler";
+import {getItem} from "@/src/lib/storage";
 
 const mockdata = {
     "externalId": "c71f10a2-2ddb-48c0-9d8f-c82735aac42e",
@@ -68,9 +69,14 @@ export default function Page () {
 
     const partnerId = params.partnerId;
 
+    const [userDetails, setUserDetails] = useState({
+        bearerToken: "",
+        externalId: ""
+    })
+
     const router = useRouter();
 
-    const {data, isLoading, error} = useFetch(`${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners/${partnerId}`, [partnerId]);
+    const {data, isLoading, error} = useFetch(`${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners/${partnerId}`, [partnerId], {}, userDetails.bearerToken, userDetails.bearerToken!=="");
 
     const [partnerStatus, setPartnerStatus] = useState(data?.data?.status ?? mockdata.status)
 
@@ -104,6 +110,10 @@ export default function Page () {
         setMessage("");
         handleSuccess("Message sent.");
     }
+
+    useEffect(() => {
+        setUserDetails(getItem("userDetails"))
+    }, []);
 
     return (
         <div className="w-full h-full flex overflow-hidden space-x-2">

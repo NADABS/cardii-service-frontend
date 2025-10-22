@@ -1,11 +1,17 @@
 'use client';
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import useFetch from "@/src/hooks/useFetch";
 import {handleError} from "@/src/lib/errorHandler";
 import {CustomSpinner} from "@/src/components/CustomSpinner";
 import CampaignsTable from "@/src/components/campaigns/CampaignsTable";
+import {getItem} from "@/src/lib/storage";
 
 export default function CampaignsPage()  {
+
+    const [userDetails, setUserDetails] = useState({
+        bearerToken: "",
+        externalId: ""
+    })
 
     const apiBaseUrl = process.env.NEXT_PUBLIC_CARDII_API_BASE_URL;
 
@@ -158,13 +164,16 @@ export default function CampaignsPage()  {
     ];
 
     const {data: interestCategories, isLoading: isLoadingInterestCategories, error} = useFetch(
-        `${apiBaseUrl}/v1/interest-categories`, ["interestCategories"]
+        `${apiBaseUrl}/v1/interest-categories`, ["interestCategories"], {}, userDetails.bearerToken, userDetails.bearerToken!=="x"
     )
 
     useEffect(() => {
         if(error) handleError(error);
     }, [error]);
 
+    useEffect(() => {
+        setUserDetails(getItem("userDetails"))
+    }, []);
 
     if (isLoadingInterestCategories) {
         return (
@@ -176,7 +185,12 @@ export default function CampaignsPage()  {
 
     return (
         <div className="w-full h-full overflow-hidden">
-            <CampaignsTable campaigns={mockData} meta={[]} interestCategories={interestCategories?.data ?? []} />
+            <CampaignsTable
+                campaigns={mockData}
+                meta={[]}
+                interestCategories={interestCategories?.data ?? []}
+                bearerToken={userDetails.bearerToken}
+            />
         </div>
     )
 }
