@@ -86,6 +86,30 @@ export default function Page() {
 
     const [message, setMessage] = useState("");
 
+    useEffect(() => {
+        if (error) {
+            // handleError(error);
+        }
+    }, [error]);
+
+    // if (isLoading) {
+    //     return (
+    //         <div className="w-full h-full flex justify-center items-center">
+    //             <CustomSpinner/>
+    //         </div>
+    //     )
+    // }
+
+    const handleBlockPartner = () => {
+        setPartnerStatus("suspended");
+        handleSuccess("Partner blocked.");
+    };
+
+    const handleUnblockPartner = () => {
+        setPartnerStatus("pending");
+        handleSuccess("Partner unblocked.");
+    };
+
     const handleContactPartner = () => {
         setMessage("");
         handleSuccess("Message sent.");
