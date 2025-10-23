@@ -6,6 +6,16 @@ import {BsThreeDotsVertical} from "react-icons/bs";
 import {usePathname, useRouter} from "next/navigation"
 import {LayoutDashboardIcon, UsersIcon, LogOutIcon, UserIcon, MessageSquareShareIcon} from "lucide-react"
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {useEffect, useState} from "react";
+import {clearLocalStore, getItem} from "@/src/lib/storage";
+import {CustomSpinner} from "@/src/components/CustomSpinner";
+
+interface Role {
+    createdAt: string;
+    guard: string;
+    name: string;
+    updatedAt: string;
+}
 
 const primaryLinks = [
     {
@@ -27,6 +37,15 @@ const primaryLinks = [
 
 const Sidebar = () => {
 
+    const [userDetails, setUserDetails] = useState({
+        name: "",
+        externalId: "",
+        bearerToken: "",
+        role: [] as Role[],
+    })
+
+    const [isLoading, setIsLoading] = useState(true)
+
     const router = useRouter();
 
     const pathname = usePathname()
@@ -37,7 +56,21 @@ const Sidebar = () => {
     }
 
     const handleLogout = () => {
+        setIsLoading(true)
+        clearLocalStore();
         router.replace("/")
+    }
+
+    useEffect(() => {
+        setUserDetails(getItem("userDetails"))
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div className="w-screen h-screen flex justify-center items-center">
+                <CustomSpinner/>
+            </div>
+        )
     }
 
     return (
@@ -67,11 +100,11 @@ const Sidebar = () => {
             <div className="w-full flex items-center justify-between">
                 <div className="flex space-x-4 items-center">
                     <div className="w-12 h-12 rounded-full text-white flex justify-center text-lg font-bold items-center bg-blue-500">
-                        {getInitials(user.name)}
+                        {getInitials(userDetails.name)}
                     </div>
                     <div>
-                        <div>{user.name}</div>
-                        <div className="text-sm">{user.role}</div>
+                        <div>{userDetails.name}</div>
+                        <div className="text-sm">{userDetails.role[0]?.name ?? "Admin"}</div>
                     </div>
                 </div>
                 <div>
