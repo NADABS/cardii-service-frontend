@@ -17,7 +17,6 @@ export default function useFetch(
                 const response = await httpGET(url, headers, token);
                 return response.data;
             } catch (error: any) {
-                handleError(error);
                 throw error;
             }
         },

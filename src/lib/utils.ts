@@ -40,6 +40,7 @@ export const formatStatus = (_status?: string) => {
 
 export const statusColourMap: Record<string, string> = {
     done: "bg-[#92C9B8]",
+    active: "bg-[#92C9B8]",
     onhold: "bg-[#6A9AD3] text-white",
     suspended: "border-[#FF3B30] bg-[#FFECEC] text-[#FF3B30]",
     failed: "border-[#FF3B30] bg-[#FFECEC] text-[#FF3B30]",

@@ -1,5 +1,4 @@
 'use client';
-
 import useFetch from "@/src/hooks/useFetch";
 import {useParams, useRouter} from "next/navigation";
 import React, {useEffect, useState} from "react";
@@ -11,7 +10,7 @@ import {handleSuccess} from "@/src/lib/successHandler";
 import {getItem} from "@/src/lib/storage";
 import {Campaign} from "@/src/types/Campaign";
 
-export default function PartnerDetailsPage() {
+export default function UserDetailsPage() {
     const params = useParams();
     const router = useRouter();
 
@@ -61,7 +60,6 @@ export default function PartnerDetailsPage() {
                 <div className="py-2 grid grid-cols-3 gap-y-4 border-y mt-4">
                     <PartnerDetailsComponent title={"External ID"} value={data?.data?.externalId || ""}/>
                     <PartnerDetailsComponent title={"Email"} value={data?.data?.email || ""}/>
-                    <PartnerDetailsComponent title={"Phone Number"} value={data?.data?.phoneNumber || ""}/>
                     <div>
                         <p className="font-[500] ">Status</p>
                         <div className="text-[0.875rem] text-gray-400 mt-1">
@@ -75,7 +73,7 @@ export default function PartnerDetailsPage() {
                 <div className="mt-4">
                     <p className="font-[500] ">Interested Categories</p>
                     <div className="w-full flex flex-wrap gap-2 items-center mt-2">
-                        {data?.data?.interestCategories?.map((category: Campaign) => (
+                        {data?.data?.interestCategories.map((category: Campaign) => (
                             <div key={category.externalId}
                                  className="bg-[#E6F0FA] border-[#0069E1] text-[#0069E1] items-center w-fit py-[0.125rem] px-[0.625rem] capitalize text-xs border rounded-full justify-center flex">{category.name}</div>
                         ))}

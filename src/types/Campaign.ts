@@ -1,8 +1,9 @@
 import InterestCategory from "@/src/types/InterestCategory";
 
-export default interface Campaign {
+export type Campaign = {
     externalId: string;
     title: string;
+    name: string;
     message: string;
     interestCategories: InterestCategory[];
     createdAt: string;
