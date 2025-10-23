@@ -1,67 +1,14 @@
 'use client';
+
 import useFetch from "@/src/hooks/useFetch";
 import {useParams, useRouter} from "next/navigation";
 import React, {useEffect, useState} from "react";
-import {handleError} from "@/src/lib/errorHandler";
-import {CustomSpinner} from "@/src/components/CustomSpinner";
 import {Button} from "@/components/ui/button";
 import PartnerDetailsComponent from "@/src/components/partners/PartnerDetailsComponent";
 import {ChevronLeft} from "lucide-react";
 import StatusBadge from "@/src/components/StatusBadge";
 import {handleSuccess} from "@/src/lib/successHandler";
 import {getItem} from "@/src/lib/storage";
-
-const mockdata = {
-    "externalId": "c71f10a2-2ddb-48c0-9d8f-c82735aac42e",
-    "internalId": "PT20251017173511882647",
-    "name": "Jonadab Kwamlah",
-    "email": "business.nadabs@gmail.com",
-    "phoneNumber": "0241028918",
-    "preferredChannel": null,
-    "status": "pending",
-    "deviceType": "desktop",
-    "browser": "Chrome",
-    "os": "MacOS",
-    "ipAddress": null,
-    "location": null,
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
-    "createdAt": "2025-10-17 17:35:11",
-    "updatedAt": "2025-10-17 17:35:11",
-    "InterestCategories": [
-        {
-            "externalId": "826ac5af-ed0c-46a2-860e-18af54b8f1c6",
-            "internalId": "IC20251017105550293134",
-            "name": "roadside support(towing / fuel assistance)",
-            "description": "roadside support(towing / fuel assistance)",
-            "createdAt": "2025-10-17 10:55:50",
-            "updatedAt": "2025-10-17 10:55:50"
-        },
-        {
-            "externalId": "8fd80ead-f029-4289-b681-8e026606da0c",
-            "internalId": "IC20251017105623786416",
-            "name": "learner (interested in defensive driving training)",
-            "description": "learner (interested in defensive driving training)",
-            "createdAt": "2025-10-17 10:56:23",
-            "updatedAt": "2025-10-17 10:56:23"
-        },
-        {
-            "externalId": "978a1b3e-e678-4a86-99c7-86c5b16bfd07",
-            "internalId": "IC20251017105705768043",
-            "name": "car owner / fleet manager",
-            "description": "car owner / fleet manager",
-            "createdAt": "2025-10-17 10:57:05",
-            "updatedAt": "2025-10-17 10:57:05"
-        },
-        {
-            "externalId": "eb5b1742-261a-4bef-85d1-bb4d5bebb707",
-            "internalId": "IC20251017105721221732",
-            "name": "driver",
-            "description": "driver",
-            "createdAt": "2025-10-17 10:57:21",
-            "updatedAt": "2025-10-17 10:57:21"
-        }
-    ]
-}
 
 export default function Page() {
     const params = useParams();
@@ -74,7 +21,7 @@ export default function Page() {
         externalId: ""
     })
 
-    const {data, isLoading, error} = useFetch(
+    const {data} = useFetch(
         `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners/${partnerId}`,
         [partnerId],
         {},
@@ -82,7 +29,7 @@ export default function Page() {
         userDetails.bearerToken !== ""
     );
 
-    const [partnerStatus, setPartnerStatus] = useState(data?.data?.status ?? mockdata.status)
+    const [partnerStatus, setPartnerStatus] = useState(data?.data?.status)
 
     const [message, setMessage] = useState("");
 
@@ -128,28 +75,27 @@ export default function Page() {
                 <div className="mt-4">
                     <p className="font-[500] ">Interested Categories</p>
                     <div className="w-full flex flex-wrap gap-2 items-center mt-2">
-                        {data?.data?.interestCategories.map((category, index) => (
-                            <div key={index}
+                        {data?.data?.interestCategories?.map((category, index) => (
+                            <div key={category.externalId}
                                  className="bg-[#E6F0FA] border-[#0069E1] text-[#0069E1] items-center w-fit py-[0.125rem] px-[0.625rem] capitalize text-xs border rounded-full justify-center flex">{category.name}</div>
                         ))}
                     </div>
                     <div className="mt-4">
                         <span className="font-[500] mr-2">Device Type:</span>
-                        <span className="capitalize">{data?.data?.deviceType ?? mockdata.deviceType}</span>
+                        <span className="capitalize">{data?.data?.deviceType}</span>
                     </div>
                     <div className="mt-4">
                         <span className="font-[500] mr-2">Browser:</span>
-                        <span className="capitalize">{data?.data?.browser ?? mockdata.browser}</span>
+                        <span className="capitalize">{data?.data?.browser}</span>
                     </div>
                     <div className="mt-4">
                         <span className="font-[500] mr-2">Operating System:</span>
-                        <span>{data?.data?.os || ""}</span>
+                        <span>{data?.data?.os}</span>
                     </div>
                 </div>
             </div>
             <div className="w-[30%] max-w-[400px] px-4 border-l">
                 <p className="text-lg font-semibold">Contact Partner</p>
-                {/*<p className="text-sm">Send partner a quick custom message</p>*/}
                 <div className="py-3 mt-2">
                     <textarea className="border focus:outline-none p-3 h-60 w-full rounded-lg"
                               placeholder="Enter your message here"
