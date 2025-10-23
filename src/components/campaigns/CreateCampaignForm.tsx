@@ -1,9 +1,9 @@
-import React, { FormEvent, useState } from "react"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect"
-import { Button } from "@/components/ui/button"
-import { handleSuccess } from "@/src/lib/successHandler"
+import React, {FormEvent, useState} from "react"
+import {Label} from "@/components/ui/label"
+import {Input} from "@/components/ui/input"
+import {MultiSelect, MultiSelectChangeEvent} from "primereact/multiselect"
+import {Button} from "@/components/ui/button"
+import {handleSuccess} from "@/src/lib/successHandler"
 import InterestCategory from "@/src/types/InterestCategory"
 
 interface Props {
@@ -11,8 +11,8 @@ interface Props {
     handleClose: () => void
 }
 
-const CreateCampaignForm = ({ interestCategories, handleClose }: Props) => {
-    const defaultFormData = { title: "", message: "", interestCategoryIds: [] as string[] }
+const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
+    const defaultFormData = {title: "", message: "", interestCategoryIds: [] as string[]}
     const [newCampaignData, setNewCampaignData] = useState(defaultFormData)
 
     function resetForm() {
@@ -44,7 +44,7 @@ const CreateCampaignForm = ({ interestCategories, handleClose }: Props) => {
                     placeholder="Enter title"
                     value={newCampaignData.title}
                     onChange={(e) =>
-                        setNewCampaignData({ ...newCampaignData, title: e.target.value })
+                        setNewCampaignData({...newCampaignData, title: e.target.value})
                     }
                     required
                     className="h-10 text-base font-normal bg-white border-border placeholder:font-normal placeholder:text-muted-foreground"
@@ -61,7 +61,7 @@ const CreateCampaignForm = ({ interestCategories, handleClose }: Props) => {
                     className="border focus:outline-none p-3 h-36 w-full rounded-lg font-normal text-base placeholder:font-normal placeholder:text-muted-foreground"
                     value={newCampaignData.message}
                     onChange={(e) =>
-                        setNewCampaignData({ ...newCampaignData, message: e.target.value })
+                        setNewCampaignData({...newCampaignData, message: e.target.value})
                     }
                     placeholder="Enter message"
                 />
@@ -93,10 +93,10 @@ const CreateCampaignForm = ({ interestCategories, handleClose }: Props) => {
                             className:
                                 "focus:outline-none focus:ring-0 flex items-center focus:border-none capitalize shadow-none font-normal",
                         },
-                        label: { className: "text-blue-500 text-sm capitalize font-normal" },
-                        token: { className: "rounded-full bg-blue-200 capitalize font-normal" },
-                        item: { className: "capitalize font-normal" },
-                        list: { className: "capitalize font-normal" },
+                        label: {className: "text-blue-500 text-sm capitalize font-normal"},
+                        token: {className: "rounded-full bg-blue-200 capitalize font-normal"},
+                        item: {className: "capitalize font-normal"},
+                        list: {className: "capitalize font-normal"},
                     }}
                 />
             </div>

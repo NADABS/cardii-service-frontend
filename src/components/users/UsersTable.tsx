@@ -9,21 +9,15 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {CiFilter} from "react-icons/ci";
-import Partner from "@/src/types/Partner";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Label} from "@/components/ui/label";
-import {httpPOST} from "@/src/lib/http-client";
-import {setItem} from "@/src/lib/storage";
-import {handleError} from "@/src/lib/errorHandler";
-import {useMutation} from "@tanstack/react-query";
-import {handleSuccess} from "@/src/lib/successHandler";
-import CreateCampaignForm from "@/src/components/campaigns/CreateCampaignForm";
 import {CustomModal} from "@/src/components/CustomModal";
 import InviteUserForm from "@/src/components/users/InviteUserForm";
+import {User} from "@/src/types/User";
 
 interface Props {
     showHeader?: boolean;
-    users: Partner[];
+    users: User[];
     meta: IMeta;
 }
 
@@ -47,7 +41,7 @@ const UsersTable = ({showHeader = true, users, meta}: Props) => {
         {
             header: "Status",
             accessor: "status" as const,
-            cell: (row: Partner) => (
+            cell: (row: User) => (
                 <StatusBadge status={row.status}/>
             ),
         },
@@ -57,9 +51,9 @@ const UsersTable = ({showHeader = true, users, meta}: Props) => {
         },
     ];
 
-    const rowActions = (partner: Partner) => (
+    const rowActions = (user: User) => (
         <button
-            onClick={() => router.push(`/partners/${partner.externalId}`)}
+            onClick={() => router.push(`/users/${user.externalId}`)}
             className="text-gray-400 font-bold">
             <BsThreeDots className="h-4 w-4"/>
         </button>
