@@ -40,7 +40,7 @@ export const formatStatus = (_status?: string) => {
 
 export const statusColourMap: Record<string, string> = {
     done: "bg-[#92C9B8]",
-    active: "bg-[#92C9B8]",
+    active: "bg-[#EBFFF2] text-[#4AA673]  border-[#4AA673] ",
     onhold: "bg-[#6A9AD3] text-white",
     suspended: "border-[#FF3B30] bg-[#FFECEC] text-[#FF3B30]",
     failed: "border-[#FF3B30] bg-[#FFECEC] text-[#FF3B30]",
@@ -129,4 +129,15 @@ export function capitalizeFirstLetter(string: string | null) {
         return string;
     }
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function parseFilters(filtersParam: string | null) {
+    if (!filtersParam) return undefined;
+
+    try {
+        const parsed = JSON.parse(filtersParam);
+        return Array.isArray(parsed) && parsed[0] ? parsed[0].value : undefined;
+    } catch {
+        return undefined;
+    }
 }
