@@ -26,12 +26,6 @@ export default function OverviewPage() {
         }
     }, []);
 
-    useEffect(() => {
-        if(dashboardData){
-            console.log(dashboardData.data)
-        }
-    }, [dashboardData]);
-
     return (
         <div className="w-full h-full overflow-hidden">
             <h1 className="text-2xl font-bold">
