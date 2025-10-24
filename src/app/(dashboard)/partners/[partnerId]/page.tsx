@@ -30,8 +30,6 @@ export default function PartnerDetailsPage() {
         userDetails.bearerToken !== ""
     );
 
-    const [partnerStatus, setPartnerStatus] = useState(data?.data?.status)
-
     const [message, setMessage] = useState("");
 
     const handleContactPartner = () => {
@@ -65,7 +63,7 @@ export default function PartnerDetailsPage() {
                     <div>
                         <p className="font-[500] ">Status</p>
                         <div className="text-[0.875rem] text-gray-400 mt-1">
-                            <StatusBadge status={data?.data?.status ?? partnerStatus ?? ""}/>
+                            <StatusBadge status={data?.data?.status ?? ""}/>
                         </div>
                     </div>
                     <PartnerDetailsComponent title={"Registration Date"} value={data?.data?.createdAt || ""}/>
