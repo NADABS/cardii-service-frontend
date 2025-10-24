@@ -3,9 +3,12 @@ import React, {useEffect, useState} from "react";
 import useFetch from "@/src/hooks/useFetch";
 import {CustomSpinner} from "@/src/components/CustomSpinner";
 import CampaignsTable from "@/src/components/campaigns/CampaignsTable";
-import {getItem} from "@/src/lib/storage";
+import {getItem, toJsonString} from "@/src/lib/storage";
+import IMeta from "@/src/types/Meta";
+import {useRouter, useSearchParams} from "next/navigation";
 
 export default function CampaignsPage() {
+    const router = useRouter();
 
     const [userDetails, setUserDetails] = useState({
         bearerToken: "",
@@ -30,6 +33,23 @@ export default function CampaignsPage() {
         userDetails.bearerToken !== ""
     )
 
+    function handlePageChange(page: string | number) {
+        const meta: IMeta = campaigns.meta;
+        let _page;
+        switch (page) {
+            case "prev":
+                _page = meta.currentPage - 1;
+                break;
+            case "next":
+                _page = meta.currentPage + 1;
+                break;
+            default:
+                _page = page as number;
+        }
+
+        router.push(`/users?page=${String(page)}`);
+    }
+
     useEffect(() => {
         setUserDetails(getItem("userDetails"))
     }, []);
@@ -49,6 +69,7 @@ export default function CampaignsPage() {
                 meta={[]}
                 interestCategories={interestCategories?.data ?? []}
                 bearerToken={userDetails.bearerToken}
+                handlePageChange={handlePageChange}
             />
         </div>
     )

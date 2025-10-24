@@ -25,8 +25,10 @@ export default function PartnersPage () {
     })
 
     function handleFiltersChange(_filter: FilterType) {
+        const updatedFilters = []
         const params = new URLSearchParams(searchParams.toString());
-        params.set('filters', toJsonString(_filter));
+        updatedFilters.push(_filter)
+        params.set('filters', toJsonString(updatedFilters));
         router.push(`/partners?${params.toString()}`);
     }
 
@@ -49,8 +51,15 @@ export default function PartnersPage () {
         router.push(`/partners?${params.toString()}`);
     }
 
+    function clearFilters() {
+        const params = new URLSearchParams();
+        params.set("page", "1");
+        params.set("filters", "[]");
+        router.replace(`/partners?${params.toString()}`);
+    }
+
     const {data, isLoading, error} = useFetch(`${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners?filters=${toJsonString(filters)}&page=${page}`,
-        ["partners", filters], {}, userDetails.bearerToken, userDetails.bearerToken!=="")
+        ["partners", filters, page], {}, userDetails.bearerToken, userDetails.bearerToken!=="")
 
     useEffect(() => {
         if(error) {
@@ -77,6 +86,7 @@ export default function PartnersPage () {
                 partners={data?.data ?? []}
                 onFilterChange={handleFiltersChange}
                 handlePageChange={handlePageLoad}
+                handleClearFilters={clearFilters}
             />
         </div>
     )

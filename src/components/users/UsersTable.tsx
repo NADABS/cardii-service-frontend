@@ -1,6 +1,6 @@
 "use client";
 import React, {useState} from "react";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {ReusableTable} from "@/src/components/ReusableTable";
 import IMeta from "@/src/types/Meta";
 import {BsThreeDots} from "react-icons/bs";
@@ -14,16 +14,51 @@ import {Label} from "@/components/ui/label";
 import {CustomModal} from "@/src/components/CustomModal";
 import InviteUserForm from "@/src/components/users/InviteUserForm";
 import {User} from "@/src/types/User";
+import {parseFilters} from "@/src/lib/utils";
+import ColumnType from "@/src/types/ColumnType";
+import FilterComponent from "@/src/components/FilterComponent";
+import FilterType from "@/src/types/FilterType";
+import Role from "@/src/types/Role";
 
 interface Props {
     showHeader?: boolean;
     users: User[];
-    meta: IMeta;
+    meta: IMeta | [];
+    onFilterChange?: (filters: FilterType) => void;
+    handlePageChange?: (page: string | number) => void;
+    handleClearFilters?: () => void;
+    roles: Role[]
 }
 
-const UsersTable = ({showHeader = true, users, meta}: Props) => {
+const UsersTable = ({
+                        showHeader = true,
+                        users,
+                        meta,
+                        onFilterChange = () => {},
+                        handlePageChange,
+                        handleClearFilters = () => {},
+                        roles
+                    }: Props) => {
+
+    const searchParams = useSearchParams();
+    const filtersParam = searchParams.get("filters");
+
+    let inputValue: string | undefined;
+
+    inputValue = parseFilters(filtersParam) ?? "";
+
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false)
+
+    const selectedColumnInitialState = {
+        columnValue: "",
+        columnName: "",
+        operator: "",
+    };
+
+    const [selectedColumn, setSelectedColumn] = useState(selectedColumnInitialState);
+    const [searchText, setSearchText] = useState(inputValue ?? "");
+    const [selectValue, setSelectValue] = useState("");
 
     const columns = [
         {
@@ -51,6 +86,12 @@ const UsersTable = ({showHeader = true, users, meta}: Props) => {
         },
     ];
 
+    const searchColumns: ColumnType[] = [
+        { columnName: "Name", columnValue: "name", operator: "LIKE" },
+        { columnName: "Email", columnValue: "email", operator: "LIKE" },
+        { columnName: "Status", columnValue: "status", operator: "=" },
+    ];
+
     const rowActions = (user: User) => (
         <button
             onClick={() => router.push(`/users/${user.externalId}`)}
@@ -60,13 +101,41 @@ const UsersTable = ({showHeader = true, users, meta}: Props) => {
 
     );
 
-    const handlePageChange = (page: number | string) => {
-        console.log("Page changed to:", page);
-    };
-
     const handleClose = () => {
         setIsOpen(false)
     }
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!selectedColumn?.columnValue) return;
+        onFilterChange({
+            field: selectedColumn.columnValue,
+            value: event.target.value,
+            operator: selectedColumn.operator,
+        });
+    };
+
+    const handleColumnChange = (columnValue: string) => {
+        setSelectValue(columnValue);
+        const currentColumn = searchColumns.find(
+            (column) => column.columnValue === columnValue,
+        ) as ColumnType;
+        setSelectedColumn(currentColumn);
+
+        if (searchText.length > 0) {
+            onFilterChange({
+                field: currentColumn.columnValue,
+                value: searchText,
+                operator: currentColumn.operator,
+            });
+        }
+    };
+
+    const onClearFilters = () => {
+        setSelectedColumn(selectedColumnInitialState);
+        setSearchText("");
+        setSelectValue("");
+        handleClearFilters();
+    };
 
     return (
         <ReusableTable
@@ -83,42 +152,14 @@ const UsersTable = ({showHeader = true, users, meta}: Props) => {
                             System Users
                         </h2>
                         <div className="mt-3 flex items-center space-x-2 justify-between">
-                            <div className="">
-                                <Input className="w-60"/>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button className="bg-white text-black border">
-                                            <CiFilter/>
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <p className="mb-2">Filter By</p>
-                                        <RadioGroup defaultValue="">
-                                            <div className="flex items-center gap-3">
-                                                <RadioGroupItem value="name" id="r1"/>
-                                                <Label htmlFor="r1">Name</Label>
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                <RadioGroupItem value="phone" id="r2"/>
-                                                <Label htmlFor="r2">Phone</Label>
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                <RadioGroupItem value="email" id="r3"/>
-                                                <Label htmlFor="r3">Email</Label>
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                <RadioGroupItem value="status" id="r4"/>
-                                                <Label htmlFor="r4">Status</Label>
-                                            </div>
-                                        </RadioGroup>
-                                    </PopoverContent>
-                                </Popover>
-                            </div>
-
-
+                            <FilterComponent handleInputChange={handleInputChange} searchText={searchText}
+                                             setSearchText={setSearchText} selectValue={selectValue}
+                                             handleColumnChange={handleColumnChange} searchColumns={searchColumns}
+                                             onClearFilters={onClearFilters}
+                            />
                             <Button onClick={() => setIsOpen(true)}>Invite User</Button>
                             <CustomModal isOpen={isOpen} onClose={handleClose} title="Invite New User" size="md">
-                                <InviteUserForm handleClose={handleClose} />
+                                <InviteUserForm handleClose={handleClose} roles={roles} />
                             </CustomModal>
                         </div>
                     </div>

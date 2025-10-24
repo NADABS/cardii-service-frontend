@@ -13,9 +13,10 @@ interface Props {
     meta: IMeta | [];
     interestCategories: InterestCategory[]
     bearerToken: string
+    handlePageChange?: (page: string | number) => void;
 }
 
-const CampaignsTable = ({campaigns, meta, interestCategories}: Props) => {
+const CampaignsTable = ({campaigns, meta, interestCategories, handlePageChange, bearerToken}: Props) => {
     const [isOpen, setIsOpen] = useState(false)
 
     const handleClose = () => {
@@ -33,6 +34,7 @@ const CampaignsTable = ({campaigns, meta, interestCategories}: Props) => {
         <ReusableTable columns={columns}
                        data={campaigns}
                        meta={meta}
+                       onPageChange={handlePageChange}
                        cardHeaderData={<div className="flex items-center justify-between ">
                            <h2 className="text-lg text-textColor-150 font-bold">
                                Campaigns
@@ -42,7 +44,9 @@ const CampaignsTable = ({campaigns, meta, interestCategories}: Props) => {
                                    <Button onClick={() => setIsOpen(true)}>Create Campaign</Button>
                                    <CustomModal isOpen={isOpen} onClose={handleClose} title="Create Campaign" size="md">
                                        <CreateCampaignForm interestCategories={interestCategories}
-                                                           handleClose={handleClose}/>
+                                                           handleClose={handleClose}
+                                                           bearerToken={bearerToken}
+                                       />
                                    </CustomModal>
                                </>
                            </div>
