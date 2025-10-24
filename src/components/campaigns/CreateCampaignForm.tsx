@@ -1,10 +1,14 @@
-import React, {FormEvent, useState} from "react"
+import React, {FormEvent, useEffect, useState} from "react"
 import {Label} from "@/components/ui/label"
 import {Input} from "@/components/ui/input"
 import {MultiSelect, MultiSelectChangeEvent} from "primereact/multiselect"
 import {Button} from "@/components/ui/button"
 import {handleSuccess} from "@/src/lib/successHandler"
 import InterestCategory from "@/src/types/InterestCategory"
+import {useMutation} from "@tanstack/react-query";
+import {httpPOST} from "@/src/lib/http-client";
+import {handleError} from "@/src/lib/errorHandler";
+import {getItem} from "@/src/lib/storage";
 
 interface Props {
     interestCategories: InterestCategory[]
@@ -12,13 +16,36 @@ interface Props {
 }
 
 const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
-    const defaultFormData = {title: "", message: "", interestCategoryIds: [] as string[]}
+    const defaultFormData = {title: "", message: "", categoryIds: [] as string[]}
     const [newCampaignData, setNewCampaignData] = useState(defaultFormData)
+    const [userDetails, setUserDetails] = useState({
+        bearerToken: "",
+        externalId: ""
+    })
 
     function resetForm() {
         setNewCampaignData(defaultFormData)
         handleClose()
     }
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (payload: typeof defaultFormData) => {
+            const response = await httpPOST(
+                `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/campaigns`,
+                payload,
+                { "Content-Type": "application/json" },
+                userDetails.bearerToken
+            )
+            return response.data
+        },
+        onSuccess: () => {
+            handleSuccess("Campaign created")
+            resetForm()
+        },
+        onError: (error) => {
+            handleError(error)
+        },
+    })
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -27,10 +54,12 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
             form.reportValidity()
             return
         }
-        resetForm()
-        handleClose()
-        handleSuccess("Campaign created")
+        mutate(newCampaignData)
     }
+
+    useEffect(() => {
+        setUserDetails(getItem("userDetails"))
+    }, []);
 
     return (
         <form onSubmit={handleSubmit} className="py-4 space-y-3 font-normal">
@@ -73,11 +102,11 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
                 </Label>
                 <MultiSelect
                     id="recipientGroups"
-                    value={newCampaignData.interestCategoryIds}
+                    value={newCampaignData.categoryIds}
                     onChange={(event: MultiSelectChangeEvent) =>
                         setNewCampaignData({
                             ...newCampaignData,
-                            interestCategoryIds: event.value,
+                            categoryIds: event.value,
                         })
                     }
                     options={interestCategories}
@@ -114,10 +143,10 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
                     disabled={
                         newCampaignData.title === "" ||
                         newCampaignData.message === "" ||
-                        newCampaignData.interestCategoryIds.length === 0
+                        newCampaignData.categoryIds.length === 0
                     }
                 >
-                    Send
+                    {isPending ? "Creating Campaign..." : "Create"}
                 </Button>
             </div>
 

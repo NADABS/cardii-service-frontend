@@ -1,5 +1,4 @@
 "use client"
-
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -15,6 +14,8 @@ import {
 } from "lucide-react"
 import { cn, getInitials } from "@/src/lib/utils"
 import { useEffect, useState } from "react"
+import {clearLocalStore} from "@/src/lib/storage";
+import {CustomSpinner} from "@/src/components/CustomSpinner";
 
 const primaryLinks = [
     { title: "Overview", href: "/overview", icon: <LayoutDashboardIcon />, roles: ["admin", "super admin", "manager", "user"] },
@@ -27,6 +28,7 @@ export default function Sidebar() {
     const router = useRouter()
     const pathname = usePathname()
     const [user, setUser] = useState<any>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         const storedUser = localStorage.getItem("userDetails")
@@ -36,7 +38,8 @@ export default function Sidebar() {
     }, [])
 
     const handleLogout = () => {
-        localStorage.removeItem("userDetails")
+        setIsLoading(true)
+        clearLocalStore();
         router.replace("/")
     }
 
@@ -47,6 +50,14 @@ export default function Sidebar() {
     const visibleLinks = primaryLinks.filter((link) =>
         link.roles.map((r) => r.toLowerCase()).includes(roleName)
     )
+
+    if (isLoading) {
+        return (
+            <div className="w-screen h-screen flex justify-center items-center absolute inset-0 z-50 bg-opacity-50 backdrop-blur">
+                <CustomSpinner/>
+            </div>
+        )
+    }
 
     return (
         <div className="w-full h-full flex flex-col justify-between border-r border-gray-200 p-4">
