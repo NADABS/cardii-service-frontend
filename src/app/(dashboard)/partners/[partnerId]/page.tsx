@@ -70,7 +70,7 @@ export default function PartnerDetailsPage() {
                     </div>
                     <PartnerDetailsComponent title={"Registration Date"} value={data?.data?.createdAt || ""}/>
                     <PartnerDetailsComponent title={"Interest Category Count"}
-                                             value={data?.data?.interestCategories.length || "0"}/>
+                                             value={data?.data?.interestCategories?.length || "0"}/>
                 </div>
                 <div className="mt-4">
                     <p className="font-[500] ">Interested Categories</p>

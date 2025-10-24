@@ -1,31 +1,47 @@
 "use client";
-import React from "react";
+import React, {useState} from "react";
 import { useRouter } from "next/navigation";
 import {ReusableTable} from "@/src/components/ReusableTable";
 import IMeta from "@/src/types/Meta";
-import {Progress} from "@/components/ui/progress";
-import {Task} from "@/src/types/Task";
 import {BsThreeDots} from "react-icons/bs";
 import StatusBadge from "@/src/components/StatusBadge";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {CiFilter} from "react-icons/ci";
-import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import Partner from "@/src/types/Partner";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Label} from "@/components/ui/label";
+import ColumnType from "@/src/types/ColumnType";
+import FilterType from "@/src/types/FilterType";
 
 interface Props {
     showHeader?: boolean;
     partners: Partner[];
     meta:  IMeta;
+    onFilterChange?: (filters: FilterType) => void;
+    handlePageChange?: (page: string | number) => void;
 }
 
-const PartnersTable = ({ showHeader = true, partners, meta }: Props) => {
+const PartnersTable = ({ showHeader = true, partners, meta, onFilterChange = ()=> {}, handlePageChange }: Props) => {
     const router = useRouter();
 
-    const columns = [
+    const [selectedColumn, setSelectedColumn] = useState({
+        columnValue: "",
+        columnName: "",
+        operator: "",
+    });
+    const [searchText, setSearchText] = useState("");
+    const [selectValue, setSelectValue] = useState("");
+
+    const searchColumns: ColumnType[] = [
+        {columnName: "Name", columnValue: "name", operator: "LIKE" },
+        {columnName: "Phone Number", columnValue: "phoneNumber", operator: "LIKE" },
+        {columnName: "Email", columnValue: "email", operator: "LIKE" },
+        {columnName: "Status", columnValue: "status", operator: "=" },
+    ]
+
+    const tableColumns = [
         {
             header: "Full Name",
             accessor: "name" as const,
@@ -50,8 +66,6 @@ const PartnersTable = ({ showHeader = true, partners, meta }: Props) => {
             header: "Date Registered",
             accessor: "createdAt" as const,
         },
-
-
     ];
 
     const rowActions = (partner: Partner) => (
@@ -63,13 +77,35 @@ const PartnersTable = ({ showHeader = true, partners, meta }: Props) => {
 
     );
 
-    const handlePageChange = (page: number | string) => {
-        console.log("Page changed to:", page);
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!selectedColumn?.columnValue) return;
+        onFilterChange({
+            field: selectedColumn.columnValue,
+            value: event.target.value,
+            operator: selectedColumn.operator,
+        });
+    };
+
+    const handleColumnChange = (columnValue: string) => {
+        console.log("called")
+        setSelectValue(columnValue);
+        const currentColumn = searchColumns.find(
+            (column) => column.columnValue === columnValue,
+        ) as ColumnType;
+        setSelectedColumn(currentColumn);
+
+        if (searchText.length > 0) {
+            onFilterChange({
+                field: currentColumn.columnValue,
+                value: searchText,
+                operator: currentColumn.operator,
+            });
+        }
     };
 
     return (
         <ReusableTable
-            columns={columns}
+            columns={tableColumns}
             data={partners}
             meta={meta}
             rowActions={rowActions}
@@ -82,7 +118,10 @@ const PartnersTable = ({ showHeader = true, partners, meta }: Props) => {
                             Partners
                         </h2>
                         <div className="mt-3 flex items-center space-x-2">
-                            <Input className="w-60" />
+                            <Input className="w-60 font-normal"
+                                   onBlur={handleInputChange}
+                                   value={searchText}
+                                   onChange={(e) => setSearchText(e.target.value)}/>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button className="bg-white text-black border">
@@ -91,14 +130,17 @@ const PartnersTable = ({ showHeader = true, partners, meta }: Props) => {
                                 </PopoverTrigger>
                                 <PopoverContent>
                                     <p className="mb-2">Filter By</p>
-                                    <RadioGroup defaultValue="">
+                                    <RadioGroup
+                                        value={selectValue}
+                                        onValueChange={handleColumnChange}
+                                    >
                                         <div className="flex items-center gap-3">
                                             <RadioGroupItem value="name" id="r1" />
                                             <Label htmlFor="r1">Name</Label>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <RadioGroupItem value="phone" id="r2" />
-                                            <Label htmlFor="r2">Phone</Label>
+                                            <RadioGroupItem value="phoneNumber" id="r2" />
+                                            <Label htmlFor="r2">Phone Number</Label>
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <RadioGroupItem value="email" id="r3" />
@@ -111,6 +153,7 @@ const PartnersTable = ({ showHeader = true, partners, meta }: Props) => {
                                     </RadioGroup>
                                 </PopoverContent>
                             </Popover>
+
                         </div>
                     </div>
                 )
