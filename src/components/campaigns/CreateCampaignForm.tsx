@@ -1,4 +1,4 @@
-import React, {FormEvent, useState} from "react"
+import React, {FormEvent, useEffect, useState} from "react"
 import {Label} from "@/components/ui/label"
 import {Input} from "@/components/ui/input"
 import {MultiSelect, MultiSelectChangeEvent} from "primereact/multiselect"
@@ -8,16 +8,20 @@ import InterestCategory from "@/src/types/InterestCategory"
 import {useMutation} from "@tanstack/react-query";
 import {httpPOST} from "@/src/lib/http-client";
 import {handleError} from "@/src/lib/errorHandler";
+import {getItem} from "@/src/lib/storage";
 
 interface Props {
     interestCategories: InterestCategory[]
     handleClose: () => void
-    bearerToken: string
 }
 
-const CreateCampaignForm = ({interestCategories, handleClose, bearerToken}: Props) => {
+const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
     const defaultFormData = {title: "", message: "", categoryIds: [] as string[]}
     const [newCampaignData, setNewCampaignData] = useState(defaultFormData)
+    const [userDetails, setUserDetails] = useState({
+        bearerToken: "",
+        externalId: ""
+    })
 
     function resetForm() {
         setNewCampaignData(defaultFormData)
@@ -30,7 +34,7 @@ const CreateCampaignForm = ({interestCategories, handleClose, bearerToken}: Prop
                 `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/campaigns`,
                 payload,
                 { "Content-Type": "application/json" },
-                bearerToken
+                userDetails.bearerToken
             )
             return response.data
         },
@@ -52,6 +56,10 @@ const CreateCampaignForm = ({interestCategories, handleClose, bearerToken}: Prop
         }
         mutate(newCampaignData)
     }
+
+    useEffect(() => {
+        setUserDetails(getItem("userDetails"))
+    }, []);
 
     return (
         <form onSubmit={handleSubmit} className="py-4 space-y-3 font-normal">

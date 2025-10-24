@@ -12,12 +12,15 @@ interface Props {
     campaigns: Campaign[];
     meta: IMeta | [];
     interestCategories: InterestCategory[]
-    bearerToken: string
     handlePageChange?: (page: string | number) => void;
 }
 
-const CampaignsTable = ({campaigns, meta, interestCategories, handlePageChange, bearerToken}: Props) => {
+const CampaignsTable = ({campaigns, meta, interestCategories, handlePageChange}: Props) => {
     const [isOpen, setIsOpen] = useState(false)
+    const [userDetails, setUserDetails] = useState({
+        bearerToken: "",
+        externalId: ""
+    })
 
     const handleClose = () => {
         setIsOpen(false)
@@ -29,6 +32,7 @@ const CampaignsTable = ({campaigns, meta, interestCategories, handlePageChange, 
         {header: "Status", accessor: "status" as const, cell: (row: Campaign) => <StatusBadge status={row.status}/>},
         {header: "Message", accessor: "message" as const},
     ];
+
 
     return (
         <ReusableTable columns={columns}
@@ -45,7 +49,6 @@ const CampaignsTable = ({campaigns, meta, interestCategories, handlePageChange, 
                                    <CustomModal isOpen={isOpen} onClose={handleClose} title="Create Campaign" size="md">
                                        <CreateCampaignForm interestCategories={interestCategories}
                                                            handleClose={handleClose}
-                                                           bearerToken={bearerToken}
                                        />
                                    </CustomModal>
                                </>

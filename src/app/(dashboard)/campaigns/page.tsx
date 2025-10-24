@@ -68,7 +68,6 @@ export default function CampaignsPage() {
                 campaigns={campaigns?.data || []}
                 meta={[]}
                 interestCategories={interestCategories?.data ?? []}
-                bearerToken={userDetails.bearerToken}
                 handlePageChange={handlePageChange}
             />
         </div>
