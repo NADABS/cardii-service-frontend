@@ -2,6 +2,7 @@ import InterestCategory from "@/src/types/InterestCategory";
 
 export type Campaign = {
     externalId: string;
+    internalId: string;
     title: string;
     name: string;
     message: string;

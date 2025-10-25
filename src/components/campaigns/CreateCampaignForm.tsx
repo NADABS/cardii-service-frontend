@@ -9,14 +9,14 @@ import {useMutation} from "@tanstack/react-query";
 import {httpPOST} from "@/src/lib/http-client";
 import {handleError} from "@/src/lib/errorHandler";
 import {getItem} from "@/src/lib/storage";
+import useFetch from "@/src/hooks/useFetch";
 
 interface Props {
-    interestCategories: InterestCategory[]
     handleClose: () => void
 }
 
-const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
-    const defaultFormData = {name: "", message: "", categoryIds: [] as string[]}
+const CreateCampaignForm = ({handleClose}: Props) => {
+    const defaultFormData = { name: "", message: "", categoryIds: [] as InterestCategory[] }
     const [newCampaignData, setNewCampaignData] = useState(defaultFormData)
     const [userDetails, setUserDetails] = useState({
         bearerToken: "",
@@ -28,12 +28,22 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
         handleClose()
     }
 
-    const { mutate, isPending } = useMutation({
+    const apiBaseUrl = process.env.NEXT_PUBLIC_CARDII_API_BASE_URL;
+
+    const {data: interestCategories} = useFetch(
+        `${apiBaseUrl}/v1/interest-categories`,
+        ["interestCategories"],
+        {},
+        userDetails.bearerToken,
+        userDetails.bearerToken !== ""
+    )
+
+    const {mutate, isPending} = useMutation({
         mutationFn: async (payload: typeof defaultFormData) => {
             const response = await httpPOST(
-                `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/campaigns`,
+                `${apiBaseUrl}/v1/campaigns`,
                 payload,
-                { "Content-Type": "application/json" },
+                {"Content-Type": "application/json"},
                 userDetails.bearerToken
             )
             return response.data
@@ -54,14 +64,23 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
             form.reportValidity()
             return
         }
-        mutate(newCampaignData)
+
+        mutate({
+            ...newCampaignData,
+            categoryIds: newCampaignData.categoryIds.map((item: any) => item.externalId),
+        })
     }
 
     useEffect(() => {
         setUserDetails(getItem("userDetails"))
     }, []);
 
-    const interestCategoryIds = interestCategories.map(item => item.externalId);
+    const handleRecipientGroupChange = (event: MultiSelectChangeEvent) => {
+        setNewCampaignData({
+            ...newCampaignData,
+            categoryIds: event.value,
+        })
+    }
 
     return (
         <form onSubmit={handleSubmit} className="py-4 space-y-3 font-normal">
@@ -105,13 +124,8 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
                 <MultiSelect
                     id="recipientGroups"
                     value={newCampaignData.categoryIds}
-                    onChange={(event: MultiSelectChangeEvent) =>
-                        setNewCampaignData({
-                            ...newCampaignData,
-                            categoryIds: event.value,
-                        })
-                    }
-                    options={interestCategoryIds}
+                    onChange={handleRecipientGroupChange}
+                    options={interestCategories?.data || []}
                     display="chip"
                     optionLabel="name"
                     placeholder="Select one or more options"

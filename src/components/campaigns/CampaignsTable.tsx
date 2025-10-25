@@ -4,18 +4,16 @@ import {ReusableTable} from "@/src/components/ReusableTable";
 import IMeta from "@/src/types/Meta";
 import {Button} from "@/components/ui/button";
 import CreateCampaignForm from "@/src/components/campaigns/CreateCampaignForm";
-import InterestCategory from "@/src/types/InterestCategory";
 import {CustomModal} from "@/src/components/CustomModal";
 import {Campaign} from "@/src/types/Campaign";
 
 interface Props {
     campaigns: Campaign[];
     meta: IMeta | [];
-    interestCategories: InterestCategory[]
     handlePageChange?: (page: string | number) => void;
 }
 
-const CampaignsTable = ({campaigns, meta, interestCategories, handlePageChange}: Props) => {
+const CampaignsTable = ({campaigns, meta, handlePageChange}: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const [userDetails, setUserDetails] = useState({
         bearerToken: "",
@@ -25,12 +23,13 @@ const CampaignsTable = ({campaigns, meta, interestCategories, handlePageChange}:
     const handleClose = () => {
         setIsOpen(false)
     }
+
     const columns = [
-        {header: "ID", accessor: "externalId" as const},
-        {header: "Title", accessor: "title" as const},
-        {header: "Created At", accessor: "createdAt" as const},
-        {header: "Status", accessor: "status" as const, cell: (row: Campaign) => <StatusBadge status={row.status}/>},
+        {header: "ID", accessor: "internalId" as const},
+        {header: "Title", accessor: "name" as const},
         {header: "Message", accessor: "message" as const},
+        {header: "Status", accessor: "status" as const, cell: (row: Campaign) => <StatusBadge status={row.status}/>},
+        {header: "Date Created", accessor: "createdAt" as const},
     ];
 
 
@@ -39,19 +38,15 @@ const CampaignsTable = ({campaigns, meta, interestCategories, handlePageChange}:
                        data={campaigns}
                        meta={meta}
                        onPageChange={handlePageChange}
-                       cardHeaderData={<div className="flex items-center justify-between ">
+                       cardHeaderData={<div className="flex items-center justify-between">
                            <h2 className="text-lg text-textColor-150 font-bold">
                                Campaigns
                            </h2>
                            <div>
-                               <>
-                                   <Button onClick={() => setIsOpen(true)}>Create Campaign</Button>
-                                   <CustomModal isOpen={isOpen} onClose={handleClose} title="Create Campaign" size="md">
-                                       <CreateCampaignForm interestCategories={interestCategories}
-                                                           handleClose={handleClose}
-                                       />
-                                   </CustomModal>
-                               </>
+                               <Button onClick={() => setIsOpen(true)}>Create Campaign</Button>
+                               <CustomModal isOpen={isOpen} onClose={handleClose} title="Create Campaign" size="md">
+                                   <CreateCampaignForm handleClose={handleClose}/>
+                               </CustomModal>
                            </div>
                        </div>}
         />

@@ -3,9 +3,9 @@ import React, {useEffect, useState} from "react";
 import useFetch from "@/src/hooks/useFetch";
 import {CustomSpinner} from "@/src/components/CustomSpinner";
 import CampaignsTable from "@/src/components/campaigns/CampaignsTable";
-import {getItem, toJsonString} from "@/src/lib/storage";
+import {getItem} from "@/src/lib/storage";
 import IMeta from "@/src/types/Meta";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 
 export default function CampaignsPage() {
     const router = useRouter();
@@ -17,15 +17,7 @@ export default function CampaignsPage() {
 
     const apiBaseUrl = process.env.NEXT_PUBLIC_CARDII_API_BASE_URL;
 
-    const {data: interestCategories, isLoading: isLoadingInterestCategories} = useFetch(
-        `${apiBaseUrl}/v1/interest-categories`,
-        ["interestCategories"],
-        {},
-        userDetails.bearerToken,
-        userDetails.bearerToken !== ""
-    )
-
-    const {data: campaigns} = useFetch(
+    const {data: campaigns, isLoading} = useFetch(
         `${apiBaseUrl}/v1/campaigns`,
         ["campaigns"],
         {},
@@ -54,7 +46,7 @@ export default function CampaignsPage() {
         setUserDetails(getItem("userDetails"))
     }, []);
 
-    if (isLoadingInterestCategories) {
+    if (isLoading) {
         return (
             <div className="w-full h-full flex justify-center items-center">
                 <CustomSpinner/>
@@ -64,12 +56,7 @@ export default function CampaignsPage() {
 
     return (
         <div className="w-full h-full overflow-hidden">
-            <CampaignsTable
-                campaigns={campaigns?.data || []}
-                meta={[]}
-                interestCategories={interestCategories?.data ?? []}
-                handlePageChange={handlePageChange}
-            />
+            <CampaignsTable campaigns={campaigns?.data || []} meta={[]} handlePageChange={handlePageChange}/>
         </div>
     )
 }
