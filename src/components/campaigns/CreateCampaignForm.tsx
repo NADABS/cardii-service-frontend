@@ -16,7 +16,7 @@ interface Props {
 }
 
 const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
-    const defaultFormData = {title: "", message: "", categoryIds: [] as string[]}
+    const defaultFormData = {name: "", message: "", categoryIds: [] as string[]}
     const [newCampaignData, setNewCampaignData] = useState(defaultFormData)
     const [userDetails, setUserDetails] = useState({
         bearerToken: "",
@@ -61,6 +61,8 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
         setUserDetails(getItem("userDetails"))
     }, []);
 
+    const interestCategoryIds = interestCategories.map(item => item.externalId);
+
     return (
         <form onSubmit={handleSubmit} className="py-4 space-y-3 font-normal">
             <div className="space-y-2">
@@ -71,9 +73,9 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
                     id="title"
                     type="text"
                     placeholder="Enter title"
-                    value={newCampaignData.title}
+                    value={newCampaignData.name}
                     onChange={(e) =>
-                        setNewCampaignData({...newCampaignData, title: e.target.value})
+                        setNewCampaignData({...newCampaignData, name: e.target.value})
                     }
                     required
                     className="h-10 text-base font-normal bg-white border-border placeholder:font-normal placeholder:text-muted-foreground"
@@ -109,7 +111,7 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
                             categoryIds: event.value,
                         })
                     }
-                    options={interestCategories}
+                    options={interestCategoryIds}
                     display="chip"
                     optionLabel="name"
                     placeholder="Select one or more options"
@@ -141,7 +143,7 @@ const CreateCampaignForm = ({interestCategories, handleClose}: Props) => {
                 <Button
                     type="submit"
                     disabled={
-                        newCampaignData.title === "" ||
+                        newCampaignData.name === "" ||
                         newCampaignData.message === "" ||
                         newCampaignData.categoryIds.length === 0
                     }
