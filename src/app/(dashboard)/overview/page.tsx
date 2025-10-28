@@ -1,56 +1,63 @@
-import {getToday} from "@/src/lib/utils";
-import {PiCalendarDotsBold} from "react-icons/pi";
+'use client';
 import StatisticsSection from "@/src/components/dashboard/StatisticsSection";
-import {BiLike, BiTrendingUp} from "react-icons/bi";
-import {CiStopwatch} from "react-icons/ci";
-import {PerformanceComponent} from "@/src/components/dashboard/PerformanceComponent";
-import {CurrentTasksTable} from "@/src/components/dashboard/CurrentTasksTable";
+import React, {useEffect, useState} from "react";
+import useFetch from "@/src/hooks/useFetch";
+import {getItem} from "@/src/lib/storage";
+import {User} from "@/src/types/User";
+import PartnersTable from "@/src/components/partners/PartnersTable";
+import {PiUsers} from "react-icons/pi";
+import {FaRegHandshake} from "react-icons/fa6";
+import {TbMessage2Up} from "react-icons/tb";
 
 export default function OverviewPage() {
+    const [user, setUser] = useState<User | null>(null);
 
-    const today = getToday();
+    const {data: dashboardData} = useFetch(
+        `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/admins/dashboard`, ["dashboard"],
+        {},
+        user?.bearerToken,
+        user?.bearerToken !== ""
+    )
+
+    useEffect(() => {
+        const storedUser = getItem("userDetails");
+        if (storedUser) {
+            setUser(storedUser)
+        }
+    }, []);
 
     return (
-        <div className="w-full h-full pl-8 pr-4 pt-8 overflow-hidden">
-            <div className="w-full flex justify-between items-baseline">
-                <div>
-                    <h1 className="text-2xl font-bold">Hello, Margaret</h1>
-                </div>
-                <div className="flex space-x-4 items-center">
-                    <p className="text-sm">{today}</p>
-                    <div className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100">
-                        <PiCalendarDotsBold/>
-                    </div>
-                </div>
-            </div>
+        <div className="w-full h-full overflow-hidden">
+            <h1 className="text-2xl font-bold">
+                Hello, {user?.name ? user.name.split(" ")[0] : "Guest"}
+            </h1>
             <div className="text-gray-400">
-                Track team progress here. You&apos;ve almost met your goals
+                Track your recent updates here
             </div>
             <div className="overflow-y-scroll" style={{height: 'calc(100vh - 120px)'}}>
                 <StatisticsSection stats={[
                     {
-                        icon: BiLike,
-                        title: "Finished",
-                        value: 18,
-                        change: "+8 tasks",
+                        icon: FaRegHandshake,
+                        title: "Partners",
+                        value: dashboardData?.data?.partners?.value || 0,
+                        change: `${dashboardData?.data?.partners?.change ?? "+0"} partners`,
                     },
                     {
-                        icon: CiStopwatch,
-                        title: "Tracked",
-                        value: "31h",
-                        change: "-6 hours",
+                        icon: PiUsers,
+                        title: "Users",
+                        value: dashboardData?.data?.users?.value || 0,
+                        change: `${dashboardData?.data?.users?.change ?? "+0"} users`,
                     },
                     {
-                        icon: BiTrendingUp,
-                        title: "Efficiency",
-                        value: "93%",
-                        change: "+12%",
+                        icon: TbMessage2Up,
+                        title: "Campaigns",
+                        value: dashboardData?.data?.campaigns?.value || 0,
+                        change: `${dashboardData?.data?.campaigns?.change ?? "+0"} campaigns`,
                     },
                 ]}/>
-                <PerformanceComponent/>
-                <CurrentTasksTable/>
+                <div className="my-5 font-semibold">Recent Registrations</div>
+                <PartnersTable showHeader={false} partners={dashboardData?.data?.partners?.recent || []} meta={[]}/>
             </div>
-
         </div>
     )
 }

@@ -1,97 +1,92 @@
-import TasksTable from "@/src/components/tasks/TasksTable";
+"use client";
 import IMeta from "@/src/types/Meta";
-import {Task} from "@/src/types/Task";
+import PartnersTable from "@/src/components/partners/PartnersTable";
+import useFetch from "@/src/hooks/useFetch";
+import {useEffect, useState} from "react";
+import {handleError} from "@/src/lib/errorHandler";
+import {CustomSpinner} from "@/src/components/CustomSpinner";
+import {getItem, toJsonString} from "@/src/lib/storage";
+import {useRouter, useSearchParams} from "next/navigation";
+import FilterType from "@/src/types/FilterType";
 
 export default function PartnersPage () {
 
-    const meta: IMeta = {
-        currentPage: 1,
-        firstPage: 1,
-        lastPage: 5,
-        perPage: 10,
-        nextPageUrl: "/api/items?page=2",
-        prevPageUrl: "",
-        total: 50,
-    };
+    const router = useRouter();
 
-    const tasks: Task[] = [
-        {
-            id: "1",
-            title: "Design Homepage Layout",
-            status: "In Progress",
-            completionRate: 65,
-            amount: 1500
-        },
-        {
-            id: "2",
-            title: "Write API Documentation",
-            status: "Completed",
-            completionRate: 100,
-            amount: 800
-        },
-        {
-            id: "3",
-            title: "Fix Login Bug",
-            status: "To Do",
-            completionRate: 0,
-            amount: 500
-        },
-        {
-            id: "4",
-            title: "Database Optimization",
-            status: "On Hold",
-            completionRate: 30,
-            amount: 2000
-        },
-        {
-            id: "5",
-            title: "Mobile App Testing",
-            status: "Completed",
-            completionRate: 100,
-            amount: 1200
-        },
-        {
-            id: "6",
-            title: "User Authentication System",
-            status: "In Progress",
-            completionRate: 80,
-            amount: 1800
-        },
-        {
-            id: "7",
-            title: "Deploy to Production",
-            status: "To Do",
-            completionRate: 0,
-            amount: 750
-        },
-        {
-            id: "8",
-            title: "Performance Monitoring Setup",
-            status: "In Progress",
-            completionRate: 45,
-            amount: 950
-        },
-        {
-            id: "9",
-            title: "Code Review Session",
-            status: "Completed",
-            completionRate: 100,
-            amount: 600
-        },
-        {
-            id: "10",
-            title: "Security Audit",
-            status: "To Do",
-            completionRate: 0,
-            amount: 3000
+    const searchParams = useSearchParams();
+
+    const filtersParam = searchParams.get("filters");
+    const filters: FilterType[] = filtersParam ? JSON.parse(filtersParam) : [];
+    const page = searchParams.get("page") || 1;
+
+    const [userDetails, setUserDetails] = useState({
+        bearerToken: "",
+        externalId: ""
+    })
+
+    function handleFiltersChange(_filter: FilterType) {
+        const updatedFilters = []
+        const params = new URLSearchParams(searchParams.toString());
+        updatedFilters.push(_filter)
+        params.set('filters', toJsonString(updatedFilters));
+        router.push(`/partners?${params.toString()}`);
+    }
+
+    function handlePageLoad(page: string | number) {
+        const meta: IMeta = data.meta;
+        let _page;
+        switch (page) {
+            case "prev":
+                _page = meta.currentPage - 1;
+                break;
+            case "next":
+                _page = meta.currentPage + 1;
+                break;
+            default:
+                _page = page as number;
         }
-    ];
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('filters', toJsonString(filters));
+        params.set('page', String(_page))
+        router.push(`/partners?${params.toString()}`);
+    }
+
+    function clearFilters() {
+        const params = new URLSearchParams();
+        params.set("page", "1");
+        params.set("filters", "[]");
+        router.replace(`/partners?${params.toString()}`);
+    }
+
+    const {data, isLoading, error} = useFetch(`${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners?filters=${toJsonString(filters)}&page=${page}`,
+        ["partners", filters, page], {}, userDetails.bearerToken, userDetails.bearerToken!=="")
+
+    useEffect(() => {
+        if(error) {
+            handleError(error);
+        }
+    }, [error]);
+
+    useEffect(() => {
+        setUserDetails(getItem("userDetails"))
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div className="w-full h-full flex justify-center items-center">
+                <CustomSpinner/>
+            </div>
+        )
+    }
 
     return (
-        <div className="w-full h-full px-2 pt-8 overflow-hidden">
-            <TasksTable
-                meta={meta}
-                tasks={tasks}
+        <div className="w-full h-full overflow-hidden">
+            <PartnersTable
+                meta={data?.meta ?? []}
+                partners={data?.data ?? []}
+                onFilterChange={handleFiltersChange}
+                handlePageChange={handlePageLoad}
+                handleClearFilters={clearFilters}
             />
         </div>
     )

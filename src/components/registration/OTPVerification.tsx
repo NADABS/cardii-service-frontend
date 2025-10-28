@@ -1,23 +1,26 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import {RegistrationComponent} from "@/src/types/RegistrationComponentType";
+import {useState, useRef, useEffect} from "react"
+import {Button} from "@/components/ui/button"
+import {toJsonString} from "@/src/lib/storage";
+import {useMutation} from "@tanstack/react-query";
+import {handleError} from "@/src/lib/errorHandler";
+import {httpPOST} from "@/src/lib/http-client";
 
 interface OTPVerificationProps {
     phoneNumber: string
-    onVerify?: (otp: string) => void
+    onVerifySuccess: () => void
     onBack?: () => void
-    setActiveComponent: (activeComponent: RegistrationComponent) => void
+
 }
 
-export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveComponent }: OTPVerificationProps) {
-    const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""])
-    const [countdown, setCountdown] = useState(34)
+export function OTPVerification({phoneNumber, onVerifySuccess, onBack,}: OTPVerificationProps) {
+    const [otpInput, setOtpInput] = useState<string[]>(["", "", "", "", "", ""])
+    const [countdown, setCountdown] = useState(60)
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
-    // Countdown timer for resend
+
     useEffect(() => {
         if (countdown > 0) {
             const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
@@ -25,35 +28,30 @@ export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveCompon
         }
     }, [countdown])
 
-    // Focus first input on mount
     useEffect(() => {
         inputRefs.current[0]?.focus()
     }, [])
 
     const handleChange = (index: number, value: string) => {
-        // Only allow single digit
         if (value.length > 1) {
             value = value.slice(-1)
         }
 
-        // Only allow numbers
         if (value && !/^\d$/.test(value)) {
             return
         }
 
-        const newOtp = [...otp]
+        const newOtp = [...otpInput]
         newOtp[index] = value
-        setOtp(newOtp)
+        setOtpInput(newOtp)
 
-        // Auto-advance to next input
         if (value && index < 5) {
             inputRefs.current[index + 1]?.focus()
         }
     }
 
     const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-        // Handle backspace
-        if (e.key === "Backspace" && !otp[index] && index > 0) {
+        if (e.key === "Backspace" && !otpInput[index] && index > 0) {
             inputRefs.current[index - 1]?.focus()
         }
     }
@@ -66,55 +64,90 @@ export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveCompon
             return
         }
 
-        const newOtp = [...otp]
+        const newOtp = [...otpInput]
         pastedData.split("").forEach((char, index) => {
             if (index < 6) {
                 newOtp[index] = char
             }
         })
-        setOtp(newOtp)
+        setOtpInput(newOtp)
 
-        // Focus the next empty input or the last one
         const nextIndex = Math.min(pastedData.length, 5)
         inputRefs.current[nextIndex]?.focus()
     }
 
+    const handleVerify = () => {
+        const otpValue = otpInput.join("")
+        if (otpValue.length === 6) {
+            mutation.mutate({
+                phoneNumber: phoneNumber,
+                otp: otpValue
+            })
+        }
+    }
+
+    const maskedPhone = phoneNumber.replace(/\d(?=\d{3})/g, "*")
+
+    const apiBaseUrl = process.env.NEXT_PUBLIC_CARDII_API_BASE_URL;
+
+    const mutation = useMutation({
+        mutationFn: async (postRequest: any) => {
+            const response = await httpPOST(
+                `${apiBaseUrl}/v1/otp/verify`,
+                postRequest,
+                {
+                    "Content-Type": "application/json",
+                }
+            );
+
+            return response.data;
+        },
+        onSuccess: () => {
+            onVerifySuccess()
+        },
+        onError: (error) => {
+            handleError(error)
+        }
+    });
+
+    const reSendOTP = useMutation({
+        mutationFn: async (postRequest: any) => {
+            const response = await httpPOST(
+                `${apiBaseUrl}/v1/otp/send`,
+                postRequest,
+                {"Content-Type": "application/json"}
+            );
+
+            return response.data
+        },
+        onError: (error) => {
+            handleError(error)
+        },
+    });
+
     const handleResend = () => {
         if (countdown === 0) {
             setCountdown(34)
-            setOtp(["", "", "", "", "", ""])
+            setOtpInput(["", "", "", "", "", ""])
             inputRefs.current[0]?.focus()
-            // Handle resend logic here
-            console.log("Resending OTP...")
+            reSendOTP.mutate({phoneNumber: phoneNumber})
         }
     }
-
-    const handleVerify = () => {
-        const otpValue = otp.join("")
-        if (otpValue.length === 6) {
-            onVerify?.(otpValue)
-            console.log("Verifying OTP:", otpValue)
-            setActiveComponent('success')
-        }
-    }
-
-    // Mask phone number
-    const maskedPhone = phoneNumber.replace(/\d(?=\d{3})/g, "*")
 
     return (
-        <div className="w-full max-w-xl bg-white rounded-lg p-8 md:p-12">
+        <div className="w-full max-w-full p-1 md:p-3">
             <div className="mb-8 text-center">
                 <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Enter OTP</h1>
                 <p className="text-sm text-foreground/80 leading-relaxed">
                     A one time OTP has been sent to your phone number ending {maskedPhone}
-                    <br />
+                    <br/>
                     Enter the OTP to join the Cardii waitlist
                 </p>
             </div>
 
             <div className="space-y-6">
                 <div className="flex justify-center gap-2 md:gap-3">
-                    {otp.map((digit, index) => (
+                    {otpInput.map((digit, index) => (
                         <input
                             key={index}
                             ref={(el) => {
@@ -127,7 +160,7 @@ export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveCompon
                             onChange={(e) => handleChange(index, e.target.value)}
                             onKeyDown={(e) => handleKeyDown(index, e)}
                             onPaste={handlePaste}
-                            className="w-10 h-10 md:w-14 md:h-16 text-center text-xl font-semibold border-2 border-border rounded-lg focus:border-foreground focus:outline-none transition-colors"
+                            className="w-9 h-9 md:w-14 md:h-16 text-center text-xl font-semibold border-2 border-border rounded-lg focus:border-foreground focus:outline-none transition-colors"
                         />
                     ))}
                 </div>
@@ -143,14 +176,15 @@ export function OTPVerification({ phoneNumber, onVerify, onBack, setActiveCompon
                         }`}
                     >
                         Resend
-                    </button>{" "}
+                    </button>
+                    {" "}
                     {countdown > 0 && `in ${countdown} secs`}
                 </div>
 
                 <div className="pt-6">
                     <Button
                         onClick={handleVerify}
-                        disabled={otp.join("").length !== 6}
+                        disabled={otpInput.join("").length !== 6}
                         className="w-full h-12 text-base bg-[#1a1d2e] hover:bg-[#2a2d3e] text-white disabled:opacity-50"
                     >
                         Verify OTP
