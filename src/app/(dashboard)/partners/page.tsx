@@ -59,7 +59,7 @@ export default function PartnersPage () {
     }
 
     const {data, isLoading, error} = useFetch(`${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners?filters=${toJsonString(filters)}&page=${page}`,
-        ["partners", filters, page], {}, userDetails.bearerToken, userDetails.bearerToken!=="")
+        ["partners", filters, page], {}, userDetails?.bearerToken, userDetails?.bearerToken !== "")
 
     useEffect(() => {
         if(error) {

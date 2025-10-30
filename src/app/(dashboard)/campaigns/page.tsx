@@ -21,8 +21,8 @@ export default function CampaignsPage() {
         `${apiBaseUrl}/v1/campaigns`,
         ["campaigns"],
         {},
-        userDetails.bearerToken,
-        userDetails.bearerToken !== ""
+        userDetails?.bearerToken,
+        userDetails?.bearerToken !== ""
     )
 
     function handlePageChange(page: string | number) {
