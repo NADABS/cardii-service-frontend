@@ -26,8 +26,8 @@ export default function UserDetailsPage() {
         `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/users/${userId}`,
         [userId],
         {},
-        userDetails.bearerToken,
-        userDetails.bearerToken !== ""
+        userDetails?.bearerToken,
+        userDetails?.bearerToken !== ""
     );
 
 
