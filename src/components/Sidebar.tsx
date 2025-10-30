@@ -16,6 +16,7 @@ import { cn, getInitials } from "@/src/lib/utils"
 import { useEffect, useState } from "react"
 import {clearLocalStore} from "@/src/lib/storage";
 import {CustomSpinner} from "@/src/components/CustomSpinner";
+import {clearSession} from "@/src/app/actions";
 
 const primaryLinks = [
     { title: "Overview", href: "/overview", icon: <LayoutDashboardIcon />, roles: ["admin", "super admin", "manager", "user"] },
@@ -40,6 +41,7 @@ export default function Sidebar() {
     const handleLogout = () => {
         setIsLoading(true)
         clearLocalStore();
+        clearSession();
         router.replace("/")
     }
 

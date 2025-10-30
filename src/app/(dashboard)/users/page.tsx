@@ -29,11 +29,11 @@ export default function UsersPage() {
 
     const {data, isLoading, error} = useFetch(`${apiBaseUrl}/v1/users?filters=${toJsonString(filters)}&page=${page}`,
         ["users", filters, page], {},
-        userDetails.bearerToken,
-        userDetails.bearerToken !== ""
+        userDetails?.bearerToken,
+        userDetails?.bearerToken !== ""
     )
 
-    const {data: roleData} = useFetch(`${apiBaseUrl}/v1/roles`,["roles"], {}, userDetails.bearerToken, userDetails.bearerToken !== "")
+    const {data: roleData} = useFetch(`${apiBaseUrl}/v1/roles`,["roles"], {}, userDetails?.bearerToken, userDetails?.bearerToken !== "")
 
     function handleFiltersChange(_filter: FilterType) {
         const updatedFilters = []

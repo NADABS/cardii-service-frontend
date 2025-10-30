@@ -9,6 +9,7 @@ import {setItem} from "@/src/lib/storage";
 import {handleError} from "@/src/lib/errorHandler";
 import {useRouter} from "next/navigation";
 import {CustomSpinner} from "@/src/components/CustomSpinner";
+import {setSession} from "@/src/app/actions";
 
 
 export default function LoginPage() {
@@ -29,8 +30,9 @@ export default function LoginPage() {
             })
             return response.data
         },
-        onSuccess: (data) => {
+        onSuccess: async(data) => {
             setItem("userDetails", data.data);
+            await setSession(JSON.stringify(data.data));
             router.replace("/overview");
         },
         onError: (error) => {
