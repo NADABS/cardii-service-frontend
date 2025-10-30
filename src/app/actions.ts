@@ -9,7 +9,17 @@ export async function setSession(data: string) {
 
 export async function getSession() {
     const cookieStore = await cookies();
-    return cookieStore.get("session");
+    const session = cookieStore.get("session");
+
+    if (!session || !session.value || session.value === "undefined") {
+        return null;
+    }
+
+    try {
+        return JSON.parse(session.value);
+    } catch {
+        return null;
+    }
 }
 
 export async function clearSession() {
