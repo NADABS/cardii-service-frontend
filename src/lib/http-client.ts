@@ -1,6 +1,6 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 
-const requestValidatorKey = process.env.NEXT_PUBLIC_REQUEST_VALIDATOR_KEY
+const requestValidatorKey = process.env.NEXT_PUBLIC_REQUEST_VALIDATOR_KEY as string
 // Common headers configuration
 const getBaseHeaders = () => ({
     Accept: "application/json",
