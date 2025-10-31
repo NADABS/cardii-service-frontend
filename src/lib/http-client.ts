@@ -1,10 +1,11 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 
+const requestValidatorKey = process.env.NEXT_PUBLIC_REQUEST_VALIDATOR_KEY
 // Common headers configuration
 const getBaseHeaders = () => ({
     Accept: "application/json",
     "ngrok-skip-browser-browser-warning": "zj",
-    [process.env.NEXT_PUBLIC_REQUEST_VALIDATOR_KEY] : process.env.NEXT_PUBLIC_REQUEST_VALIDATOR_SECRET || "",
+    [requestValidatorKey] : process.env.NEXT_PUBLIC_REQUEST_VALIDATOR_SECRET || "",
 });
 
 /**
