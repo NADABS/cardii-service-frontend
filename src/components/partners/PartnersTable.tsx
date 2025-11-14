@@ -16,50 +16,27 @@ import ColumnType from "@/src/types/ColumnType";
 import FilterType from "@/src/types/FilterType";
 import {parseFilters} from "@/src/lib/utils";
 import FilterComponent from "@/src/components/FilterComponent";
+import {CustomModal} from "@/src/components/CustomModal";
+import InviteUserForm from "@/src/components/users/InviteUserForm";
 
 interface Props {
-    showHeader?: boolean;
     partners: Partner[];
     meta: IMeta | [];
     onFilterChange?: (filters: FilterType) => void;
     handlePageChange?: (page: string | number) => void;
+    handlePerPageChange?: (perPage: string | number) => void;
     handleClearFilters?: () => void;
 }
 
 const PartnersTable = ({
-                           showHeader = true,
                            partners,
                            meta,
-                           onFilterChange = () => {},
                            handlePageChange,
-                           handleClearFilters = () => {},
+                           handleClearFilters = () => {
+                           },
                        }: Props) => {
 
-    const searchParams = useSearchParams();
-    const filtersParam = searchParams.get("filters");
-
-    let inputValue: string | undefined;
-
-    inputValue = parseFilters(filtersParam) ?? "";
-
     const router = useRouter();
-
-    const selectedColumnInitialState = {
-        columnValue: "",
-        columnName: "",
-        operator: "",
-    };
-
-    const [selectedColumn, setSelectedColumn] = useState(selectedColumnInitialState);
-    const [searchText, setSearchText] = useState(inputValue ?? "");
-    const [selectValue, setSelectValue] = useState("");
-
-    const searchColumns: ColumnType[] = [
-        {columnName: "Name", columnValue: "name", operator: "LIKE"},
-        {columnName: "Phone Number", columnValue: "phoneNumber", operator: "LIKE"},
-        {columnName: "Email", columnValue: "email", operator: "LIKE"},
-        {columnName: "Status", columnValue: "status", operator: "="},
-    ];
 
     const tableColumns = [
         {header: "Full Name", accessor: "name" as const},
@@ -82,59 +59,21 @@ const PartnersTable = ({
         </button>
     );
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!selectedColumn?.columnValue) return;
-        onFilterChange({
-            field: selectedColumn.columnValue,
-            value: event.target.value,
-            operator: selectedColumn.operator,
-        });
-    };
-
-    const handleColumnChange = (columnValue: string) => {
-        setSelectValue(columnValue);
-        const currentColumn = searchColumns.find(
-            (column) => column.columnValue === columnValue,
-        ) as ColumnType;
-        setSelectedColumn(currentColumn);
-
-        if (searchText.length > 0) {
-            onFilterChange({
-                field: currentColumn.columnValue,
-                value: searchText,
-                operator: currentColumn.operator,
-            });
-        }
-    };
-
     const onClearFilters = () => {
-        setSelectedColumn(selectedColumnInitialState);
-        setSearchText("");
-        setSelectValue("");
         handleClearFilters();
     };
 
     return (
         <div className="overflow-y-auto" style={{maxHeight: "95vh"}}>
             <ReusableTable
+                title={"Partners"}
                 columns={tableColumns}
                 data={partners}
                 meta={meta}
                 rowActions={rowActions}
                 onPageChange={handlePageChange}
-                searchable={false}
-                cardHeaderData={
-                    showHeader && (
-                        <div className="flex flex-col items-left">
-                            <h2 className="text-lg text-textColor-150 font-bold">Partners</h2>
-                            <FilterComponent handleInputChange={handleInputChange} searchText={searchText}
-                                             setSearchText={setSearchText} selectValue={selectValue}
-                                             handleColumnChange={handleColumnChange} searchColumns={searchColumns}
-                                             onClearFilters={onClearFilters}
-                            />
-                        </div>
-                    )
-                }
+                onPerPageChange={handlePageChange}
+                searchable={true}
             />
         </div>
     );

@@ -34,14 +34,12 @@ const CampaignsTable = ({campaigns, meta, handlePageChange}: Props) => {
 
 
     return (
-        <ReusableTable columns={columns}
+        <ReusableTable title="Campaigns"
+                       columns={columns}
                        data={campaigns}
                        meta={meta}
                        onPageChange={handlePageChange}
-                       cardHeaderData={<div className="flex items-center justify-between">
-                           <h2 className="text-lg text-textColor-150 font-bold">
-                               Campaigns
-                           </h2>
+                       headerRight={<div className="flex items-center justify-between">
                            <div>
                                <Button onClick={() => setIsOpen(true)}>Create Campaign</Button>
                                <CustomModal isOpen={isOpen} onClose={handleClose} title="Create Campaign" size="md">

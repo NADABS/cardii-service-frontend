@@ -57,9 +57,9 @@ export default function UsersPage() {
                 _page = page as number;
         }
         const params = new URLSearchParams(searchParams.toString());
-        params.set('filters', toJsonString(filters));
+        params.set('filters', toJsonString(filters))
         params.set('page', String(_page))
-        router.push(`/users?${params.toString()}`);
+        router.push(`/users?${params.toString()}`)
     }
 
     function clearFilters() {

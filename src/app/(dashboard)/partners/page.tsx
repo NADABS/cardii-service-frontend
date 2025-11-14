@@ -9,7 +9,7 @@ import {getItem, toJsonString} from "@/src/lib/storage";
 import {useRouter, useSearchParams} from "next/navigation";
 import FilterType from "@/src/types/FilterType";
 
-export default function PartnersPage () {
+export default function PartnersPage() {
 
     const router = useRouter();
 
@@ -58,11 +58,15 @@ export default function PartnersPage () {
         router.replace(`/partners?${params.toString()}`);
     }
 
-    const {data, isLoading, error} = useFetch(`${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners?filters=${toJsonString(filters)}&page=${page}`,
+    const {
+        data,
+        isLoading,
+        error
+    } = useFetch(`${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/partners?filters=${toJsonString(filters)}&page=${page}`,
         ["partners", filters, page], {}, userDetails?.bearerToken, userDetails?.bearerToken !== "")
 
     useEffect(() => {
-        if(error) {
+        if (error) {
             handleError(error);
         }
     }, [error]);
@@ -79,6 +83,10 @@ export default function PartnersPage () {
         )
     }
 
+    const handlePerPageLoad = () => {
+
+    }
+
     return (
         <div className="w-full h-full overflow-hidden">
             <PartnersTable
@@ -86,6 +94,7 @@ export default function PartnersPage () {
                 partners={data?.data ?? []}
                 onFilterChange={handleFiltersChange}
                 handlePageChange={handlePageLoad}
+                handlePerPageChange={handlePerPageLoad}
                 handleClearFilters={clearFilters}
             />
         </div>
