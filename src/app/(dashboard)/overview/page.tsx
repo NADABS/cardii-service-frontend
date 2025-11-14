@@ -8,9 +8,12 @@ import PartnersTable from "@/src/components/partners/PartnersTable";
 import {PiUsers} from "react-icons/pi";
 import {FaRegHandshake} from "react-icons/fa6";
 import {TbMessage2Up} from "react-icons/tb";
+import {Button} from "@/components/ui/button";
+import {useRouter} from "next/navigation";
 
 export default function OverviewPage() {
     const [user, setUser] = useState<User | null>(null);
+    const router = useRouter();
 
     const {data: dashboardData} = useFetch(
         `${process.env.NEXT_PUBLIC_CARDII_API_BASE_URL}/v1/admins/dashboard`, ["dashboard"],
@@ -55,7 +58,11 @@ export default function OverviewPage() {
                         change: `${dashboardData?.data?.campaigns?.change ?? "+0"} campaigns`,
                     },
                 ]}/>
-                <div className="my-5 font-semibold">Recent Registrations</div>
+                <div className="my-5 font-semibold flex justify-between">
+                    <div className="">Recent Registrations</div>
+                    <Button onClick={() => router.push("/partners")}>View All</Button>
+
+                </div>
                 <PartnersTable showHeader={false} partners={dashboardData?.data?.partners?.recent || []} meta={[]}/>
             </div>
         </div>
