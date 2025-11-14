@@ -1,11 +1,11 @@
-import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
+import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from "axios";
 
 const requestValidatorKey = process.env.NEXT_PUBLIC_REQUEST_VALIDATOR_KEY as string
 // Common headers configuration
 const getBaseHeaders = () => ({
     Accept: "application/json",
     "ngrok-skip-browser-browser-warning": "zj",
-    [requestValidatorKey] : process.env.NEXT_PUBLIC_REQUEST_VALIDATOR_SECRET || "",
+    [requestValidatorKey]: process.env.NEXT_PUBLIC_REQUEST_VALIDATOR_SECRET || "",
 });
 
 /**
@@ -20,7 +20,7 @@ export async function httpGET(
     _headers: Record<string, string> = {},
     token: string | null = null
 ): Promise<AxiosResponse> {
-    return await httpClient(url, { method: "GET" }, _headers, token);
+    return await httpClient(url, {method: "GET"}, _headers, token);
 }
 
 /**
@@ -37,7 +37,7 @@ export async function httpPOST(
     _headers: Record<string, string> = {},
     token: string | null = null
 ): Promise<AxiosResponse> {
-    return await httpClient(url, { data, method: "POST" }, _headers, token);
+    return await httpClient(url, {data, method: "POST"}, _headers, token);
 }
 
 /**
@@ -91,7 +91,6 @@ export async function httpDELETE(
     return await httpClient(url, {data, method: "DELETE"}, _headers, token);
 }
 
-
 /**
  * Sends an HTTP request to the specified URL with the given options (with authentication).
  * @param {string | URL} url - The URL to send the request to.
@@ -119,23 +118,24 @@ export default async function httpClient(
         ...options,
     };
 
-    return axios(config);
-}
+    try {
+        return  await axios(config);
+    } catch (error) {
+        const _error = error as AxiosError;
 
-/**
- * External service client with requestValidator but without Bearer token from admin
- */
-export async function httpExternalServiceClient(
-    url: string | URL,
-    options?: object | null,
-    _headers: object = {},
-): Promise<Response> {
+        // if (_error.response?.status === 401) {
+        //     if (typeof window !== "undefined") {
+        //         document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+        //         document.cookie = `session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+        //         window.location.href = "/login";
+        //     }
+        //
+        //     return {
+        //         __UNAUTHORIZED__: true,
+        //         originalError: _error,
+        //     };
+        // }
 
-    const headers = {
-        ...getBaseHeaders(),
-        ..._headers,
-    };
-
-    const _options = {...options, headers};
-    return await fetch(url, _options);
+        throw _error;
+    }
 }

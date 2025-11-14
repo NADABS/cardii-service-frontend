@@ -8,7 +8,13 @@ const publicRoutes: string[] = ["/", "/login", "/register", "/verify"];
 export default async function authorize(request: NextRequest) {
     if (!publicRoutes.includes(request.nextUrl.pathname)) {
         const session = await getSession();
-        if (!session)
-            return NextResponse.redirect(new URL("/", request.url));
+        if (!session) {
+            const response = NextResponse.redirect(new URL("/", request.url));
+
+            // response.cookies.set("token", "", { expires: new Date(0), path: "/" });
+            // response.cookies.set("session", "", { expires: new Date(0), path: "/" });
+
+            return response;
+        }
     }
 }
