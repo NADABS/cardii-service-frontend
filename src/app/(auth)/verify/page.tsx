@@ -23,7 +23,7 @@ export default function Page() {
 
     const apiBaseUrl = process.env.NEXT_PUBLIC_CARDII_API_BASE_URL;
 
-    const verifyEmail = useMutation({
+    const verifyUser = useMutation({
         mutationFn: async (postRequest: any) => {
             const response = await httpPOST(`${apiBaseUrl}/v1/users/verify`, postRequest, {
                 "Content-Type": "application/json",
@@ -55,7 +55,10 @@ export default function Page() {
             setItem("userDetails", data.data);
             router.replace("/overview");
         },
-        onError: (error) => {handleError(error)}
+        onError: (error) => {
+            setDisplayLoader(false)
+            handleError(error)
+        }
     })
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -101,11 +104,11 @@ export default function Page() {
 
     useEffect(() => {
         if (token && token.trim() !== "") {
-            verifyEmail.mutate({ token })
+            verifyUser.mutate({ token })
         }
     }, [token])
 
-    if (verifyEmail.isPending || displayLoader) {
+    if (verifyUser.isPending || displayLoader) {
         return (
             <div className="w-full h-full flex justify-center items-center">
                 <CustomSpinner />
