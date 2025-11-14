@@ -55,30 +55,30 @@ const PartnersTable = ({
     const [selectValue, setSelectValue] = useState("");
 
     const searchColumns: ColumnType[] = [
-        { columnName: "Name", columnValue: "name", operator: "LIKE" },
-        { columnName: "Phone Number", columnValue: "phoneNumber", operator: "LIKE" },
-        { columnName: "Email", columnValue: "email", operator: "LIKE" },
-        { columnName: "Status", columnValue: "status", operator: "=" },
+        {columnName: "Name", columnValue: "name", operator: "LIKE"},
+        {columnName: "Phone Number", columnValue: "phoneNumber", operator: "LIKE"},
+        {columnName: "Email", columnValue: "email", operator: "LIKE"},
+        {columnName: "Status", columnValue: "status", operator: "="},
     ];
 
     const tableColumns = [
-        { header: "Full Name", accessor: "name" as const },
-        { header: "Email", accessor: "email" as const },
-        { header: "Phone Number", accessor: "phoneNumber" as const },
+        {header: "Full Name", accessor: "name" as const},
+        {header: "Email", accessor: "email" as const},
+        {header: "Phone Number", accessor: "phoneNumber" as const},
         {
             header: "Status",
             accessor: "status" as const,
-            cell: (row: Partner) => <StatusBadge status={row.status} />,
+            cell: (row: Partner) => <StatusBadge status={row.status}/>,
         },
-        { header: "Date Registered", accessor: "createdAt" as const },
+        {header: "Date Registered", accessor: "createdAt" as const},
     ];
 
     const rowActions = (partner: Partner) => (
         <button
             onClick={() => router.push(`/partners/${partner.externalId}`)}
-            className="text-gray-400 font-bold"
+            className="text-gray-400 font-bold cursor-pointer"
         >
-            <BsThreeDots className="h-4 w-4" />
+            <BsThreeDots className="h-4 w-4"/>
         </button>
     );
 
@@ -115,26 +115,28 @@ const PartnersTable = ({
     };
 
     return (
-        <ReusableTable
-            columns={tableColumns}
-            data={partners}
-            meta={meta}
-            rowActions={rowActions}
-            onPageChange={handlePageChange}
-            searchable={false}
-            cardHeaderData={
-                showHeader && (
-                    <div className="flex flex-col items-left">
-                        <h2 className="text-lg text-textColor-150 font-bold">Partners</h2>
-                        <FilterComponent handleInputChange={handleInputChange} searchText={searchText}
-                                         setSearchText={setSearchText} selectValue={selectValue}
-                                         handleColumnChange={handleColumnChange} searchColumns={searchColumns}
-                                         onClearFilters={onClearFilters}
-                        />
-                    </div>
-                )
-            }
-        />
+        <div className="overflow-y-auto" style={{maxHeight: "95vh"}}>
+            <ReusableTable
+                columns={tableColumns}
+                data={partners}
+                meta={meta}
+                rowActions={rowActions}
+                onPageChange={handlePageChange}
+                searchable={false}
+                cardHeaderData={
+                    showHeader && (
+                        <div className="flex flex-col items-left">
+                            <h2 className="text-lg text-textColor-150 font-bold">Partners</h2>
+                            <FilterComponent handleInputChange={handleInputChange} searchText={searchText}
+                                             setSearchText={setSearchText} selectValue={selectValue}
+                                             handleColumnChange={handleColumnChange} searchColumns={searchColumns}
+                                             onClearFilters={onClearFilters}
+                            />
+                        </div>
+                    )
+                }
+            />
+        </div>
     );
 };
 
