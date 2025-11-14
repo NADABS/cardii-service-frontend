@@ -34,9 +34,11 @@ const UsersTable = ({
                         showHeader = true,
                         users,
                         meta,
-                        onFilterChange = () => {},
+                        onFilterChange = () => {
+                        },
                         handlePageChange,
-                        handleClearFilters = () => {},
+                        handleClearFilters = () => {
+                        },
                         roles
                     }: Props) => {
 
@@ -87,9 +89,9 @@ const UsersTable = ({
     ];
 
     const searchColumns: ColumnType[] = [
-        { columnName: "Name", columnValue: "name", operator: "LIKE" },
-        { columnName: "Email", columnValue: "email", operator: "LIKE" },
-        { columnName: "Status", columnValue: "status", operator: "=" },
+        {columnName: "Name", columnValue: "name", operator: "LIKE"},
+        {columnName: "Email", columnValue: "email", operator: "LIKE"},
+        {columnName: "Status", columnValue: "status", operator: "="},
     ];
 
     const rowActions = (user: User) => (
@@ -139,31 +141,20 @@ const UsersTable = ({
 
     return (
         <ReusableTable
+            title="System Users"
             columns={columns}
             data={users}
             meta={meta}
             rowActions={rowActions}
             onPageChange={handlePageChange}
-            searchable={false}
-            cardHeaderData={
-                showHeader && (
-                    <div className="flex flex-col items-left ">
-                        <h2 className="text-lg text-textColor-150 font-bold">
-                            System Users
-                        </h2>
-                        <div className="mt-3 flex items-center space-x-2 justify-between">
-                            <FilterComponent handleInputChange={handleInputChange} searchText={searchText}
-                                             setSearchText={setSearchText} selectValue={selectValue}
-                                             handleColumnChange={handleColumnChange} searchColumns={searchColumns}
-                                             onClearFilters={onClearFilters}
-                            />
-                            <Button onClick={() => setIsOpen(true)}>Invite User</Button>
-                            <CustomModal isOpen={isOpen} onClose={handleClose} title="Invite New User" size="md">
-                                <InviteUserForm handleClose={handleClose} roles={roles} />
-                            </CustomModal>
-                        </div>
-                    </div>
-                )
+            searchable={true}
+            headerRight={
+                <div className="flex items-center space-x-2 justify-between">
+                    <Button onClick={() => setIsOpen(true)} className="h-8">Invite User</Button>
+                    <CustomModal isOpen={isOpen} onClose={handleClose} title="Invite New User" size="md">
+                        <InviteUserForm handleClose={handleClose} roles={roles}/>
+                    </CustomModal>
+                </div>
             }
         />
     );

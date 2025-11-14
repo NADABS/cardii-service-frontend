@@ -6,6 +6,7 @@ import {CiFilter} from "react-icons/ci";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Label} from "@/components/ui/label";
 import ColumnType from "@/src/types/ColumnType";
+import {XIcon} from "lucide-react";
 
 interface Props {
     handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -25,34 +26,37 @@ const FilterComponent = ({handleInputChange, searchText, setSearchText, selectVa
                 onBlur={handleInputChange}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
+                placeholder="Search..."
             />
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button className="bg-white text-black border">
-                        <CiFilter />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                    <p className="mb-2 font-medium">Filter By</p>
-                    <RadioGroup
-                        value={selectValue}
-                        onValueChange={handleColumnChange}
-                    >
-                        {searchColumns.map((column, index) => (
-                            <div key={column.columnValue} className="flex items-center gap-3 mb-2">
-                                <RadioGroupItem
-                                    value={column.columnValue}
-                                    id={`r${index}`}
-                                />
-                                <Label htmlFor={`r${index}`}>
-                                    {column.columnName}
-                                </Label>
-                            </div>
-                        ))}
-                    </RadioGroup>
-                </PopoverContent>
-            </Popover>
-            <Button onClick={onClearFilters}>Clear</Button>
+            {/*<Popover>*/}
+            {/*    <PopoverTrigger asChild>*/}
+            {/*        <Button className="bg-white text-black border">*/}
+            {/*            <CiFilter />*/}
+            {/*        </Button>*/}
+            {/*    </PopoverTrigger>*/}
+            {/*    <PopoverContent>*/}
+            {/*        <p className="mb-2 font-medium">Filter By</p>*/}
+            {/*        <RadioGroup*/}
+            {/*            value={selectValue}*/}
+            {/*            onValueChange={handleColumnChange}*/}
+            {/*        >*/}
+            {/*            {searchColumns.map((column, index) => (*/}
+            {/*                <div key={column.columnValue} className="flex items-center gap-3 mb-2">*/}
+            {/*                    <RadioGroupItem*/}
+            {/*                        value={column.columnValue}*/}
+            {/*                        id={`r${index}`}*/}
+            {/*                    />*/}
+            {/*                    <Label htmlFor={`r${index}`}>*/}
+            {/*                        {column.columnName}*/}
+            {/*                    </Label>*/}
+            {/*                </div>*/}
+            {/*            ))}*/}
+            {/*        </RadioGroup>*/}
+            {/*    </PopoverContent>*/}
+            {/*</Popover>*/}
+            <Button onClick={onClearFilters}>
+                <XIcon/>
+            </Button>
         </div>
     )
 }
