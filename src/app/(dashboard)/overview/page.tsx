@@ -10,6 +10,12 @@ import {FaRegHandshake} from "react-icons/fa6";
 import {TbMessage2Up} from "react-icons/tb";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
+import {ReusableTable} from "@/src/components/ReusableTable";
+import Partner from "@/src/types/Partner";
+import StatusBadge from "@/src/components/StatusBadge";
+import {BsThreeDots} from "react-icons/bs";
+import {CustomModal} from "@/src/components/CustomModal";
+import InviteUserForm from "@/src/components/users/InviteUserForm";
 
 export default function OverviewPage() {
     const [user, setUser] = useState<User | null>(null);
@@ -27,7 +33,28 @@ export default function OverviewPage() {
         if (storedUser) {
             setUser(storedUser)
         }
-    }, []);
+    }, [])
+
+    const tableColumns = [
+        {header: "Full Name", accessor: "name" as const},
+        {header: "Email", accessor: "email" as const},
+        {header: "Phone Number", accessor: "phoneNumber" as const},
+        {
+            header: "Status",
+            accessor: "status" as const,
+            cell: (row: Partner) => <StatusBadge status={row.status}/>,
+        },
+        {header: "Date Registered", accessor: "createdAt" as const},
+    ]
+
+    const rowActions = (partner: Partner) => (
+        <button
+            onClick={() => router.push(`/partners/${partner.externalId}`)}
+            className="text-gray-400 font-bold cursor-pointer"
+        >
+            <BsThreeDots className="h-4 w-4"/>
+        </button>
+    )
 
     return (
         <div className="w-full h-full overflow-hidden">
@@ -58,12 +85,17 @@ export default function OverviewPage() {
                         change: `${dashboardData?.data?.campaigns?.change ?? "+0"} campaigns`,
                     },
                 ]}/>
-                <div className="my-5 font-semibold flex justify-between">
-                    <div className="">Recent Registrations</div>
-                    <Button onClick={() => router.push("/partners")}>View All</Button>
 
+                <div className="mt-10">
+                    <ReusableTable
+                        columns={tableColumns}
+                        data={dashboardData?.data?.partners?.recent ?? []}
+                        rowActions={rowActions}
+                        searchable={false}
+                        title="Recent Registrations"
+                        headerRight={<Button onClick={() => router.push("/partners")}>View All</Button>}
+                    />
                 </div>
-                <PartnersTable showHeader={false} partners={dashboardData?.data?.partners?.recent || []} meta={[]}/>
             </div>
         </div>
     )

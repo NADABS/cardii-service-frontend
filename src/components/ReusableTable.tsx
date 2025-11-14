@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/table";
 import {Input} from "@/components/ui/input";
 
-import {Search} from "lucide-react";
+import {ArrowUpDown, Search, SlidersHorizontal} from "lucide-react";
 import {twMerge} from "tailwind-merge";
-import {Card, CardHeader} from "@/components/ui/card";
+import {Card, CardHeader, CardTitle} from "@/components/ui/card";
 import IMeta from "@/src/types/Meta";
 import Pagination from "@/src/components/Pagination";
+import {Button} from "@/components/ui/button";
 
 export type Column<T> = {
     header: string;
@@ -29,27 +30,27 @@ export type Column<T> = {
 };
 
 export type DataTableProps<T> = {
-    caption?: string;
+    title?: string
     columns: Column<T>[];
     data: T[];
     emptyState?: React.ReactNode;
     searchable?: boolean;
-    pageSize?: number;
-    currentPage?: number;
-    totalPages?: number;
+    filterable?: boolean;
+    sortable?: boolean;
     onPageChange?: (page: number | string) => void;
+    onPerPageChange?: (perPage: number | string) => void;
     rowActions?: (row: T) => React.ReactNode;
     footer?: React.ReactNode;
-    meta: IMeta | [];
+    meta?: IMeta | [];
     cardHeaderClassName?: string;
-    cardHeaderData?: React.ReactNode;
     tableHeaderClassName?: string;
     tableCellClassName?: string;
     showHeadersRow?: boolean;
+    headerRight?: React.ReactNode;
 };
 
 export function ReusableTable<T extends Record<string, any>>({
-                                                                 caption,
+                                                                 title,
                                                                  columns,
                                                                  data,
                                                                  emptyState = (
@@ -59,12 +60,14 @@ export function ReusableTable<T extends Record<string, any>>({
                                                                      </div>
                                                                  ),
                                                                  searchable = false,
-                                                                 totalPages,
+                                                                 filterable = false,
+                                                                 sortable = false,
                                                                  onPageChange,
+                                                                 onPerPageChange,
                                                                  rowActions,
                                                                  footer,
                                                                  meta,
-                                                                 cardHeaderData,
+                                                                 headerRight,
                                                                  tableHeaderClassName,
                                                                  tableCellClassName,
                                                                  showHeadersRow = true
@@ -85,24 +88,33 @@ export function ReusableTable<T extends Record<string, any>>({
     return (
         <div className="h-full flex flex-col">
             <Card className="shadow-none border-none rounded-none gap-0 flex flex-col flex-grow p-0">
-                {cardHeaderData && (
-                    <CardHeader className="pb-2 px-0 font-bold ">{cardHeaderData}</CardHeader>
-                )}
+                <div className={`flex ${title ? "justify-between" : "justify-start"} items-center mt-3`}>
+                    {title && <CardTitle className="pb-2 px-0 font-bold ">{title}</CardTitle>}
 
-                {searchable && (
-                    <div className="mb-4 max-w-sm relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4"/>
-                        <Input
-                            className="pl-10"
-                            placeholder="Search…"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                        />
+                    <div className="flex items-center gap-2 mb-4">
+                        {searchable && <div className="max-w-sm relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4"/>
+                            <Input
+                                className="pl-8 h-8"
+                                placeholder="Search…"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                            />
+                        </div>}
+
+                        {filterable && <Button variant="ghost" size="sm" className="gap-2 h-9 border">
+                            <SlidersHorizontal className="h-4 w-4"/> Filters
+                        </Button>}
+
+                        {filterable && <Button variant="ghost" size="sm" className="gap-2 h-9 border">
+                            <SlidersHorizontal className="h-4 w-4"/> Filters
+                        </Button>}
+
+                        {headerRight}
                     </div>
-                )}
-                <Table>
-                    {caption && <TableCaption>{caption}</TableCaption>}
+                </div>
 
+                <Table>
                     {showHeadersRow && (
                         <TableHeader>
                             <TableRow>
@@ -127,47 +139,47 @@ export function ReusableTable<T extends Record<string, any>>({
                     )}
 
                     <TableBody>
-                            {filtered.length ? (
-                                filtered.map((row, i) => (
-                                    <TableRow key={i} className="text-xs 2xl:text-sm">
-                                        {columns.map((col) => (
-                                            <TableCell
-                                                key={String(col.accessor)}
-                                                className={twMerge(
-                                                    `text-${
-                                                        col.align ?? "left"
-                                                    } border-b border-borderprimary`,
-                                                    tableCellClassName,
-                                                    col.cellClassName
-                                                )}
-                                            >
-                                                {col.cell
-                                                    ? col.cell(row)
-                                                    : String(row[col.accessor] ?? "")}
-                                            </TableCell>
-                                        ))}
-                                        {rowActions && (
-                                            <TableCell className="text-center border-b border-borderprimary">
-                                                {rowActions(row)}
-                                            </TableCell>
-                                        )}
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={
-                                            showHeadersRow
-                                                ? columns.length + (rowActions ? 1 : 0)
-                                                : 1
-                                        }
-                                        className="text-center py-4"
-                                    >
-                                        {emptyState}
-                                    </TableCell>
-
+                        {filtered.length ? (
+                            filtered.map((row, i) => (
+                                <TableRow key={i} className="text-xs 2xl:text-sm">
+                                    {columns.map((col) => (
+                                        <TableCell
+                                            key={String(col.accessor)}
+                                            className={twMerge(
+                                                `text-${
+                                                    col.align ?? "left"
+                                                } border-b border-borderprimary`,
+                                                tableCellClassName,
+                                                col.cellClassName
+                                            )}
+                                        >
+                                            {col.cell
+                                                ? col.cell(row)
+                                                : String(row[col.accessor] ?? "")}
+                                        </TableCell>
+                                    ))}
+                                    {rowActions && (
+                                        <TableCell className="text-center border-b border-borderprimary">
+                                            {rowActions(row)}
+                                        </TableCell>
+                                    )}
                                 </TableRow>
-                            )}
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={
+                                        showHeadersRow
+                                            ? columns.length + (rowActions ? 1 : 0)
+                                            : 1
+                                    }
+                                    className="text-center py-4"
+                                >
+                                    {emptyState}
+                                </TableCell>
+
+                            </TableRow>
+                        )}
                     </TableBody>
 
                     {footer && <TableFooter>{footer}</TableFooter>}
@@ -176,7 +188,7 @@ export function ReusableTable<T extends Record<string, any>>({
 
             {onPageChange && meta && !Array.isArray(meta) && (
                 <div className="flex justify-center mt-auto">
-                    <Pagination meta={meta as IMeta} loadPage={onPageChange}/>
+                    <Pagination meta={meta as IMeta} onPageChange={onPageChange} onPerPageChange={onPerPageChange}/>
                 </div>
             )}
         </div>
